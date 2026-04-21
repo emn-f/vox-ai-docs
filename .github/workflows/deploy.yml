@@ -1,9 +1,11 @@
-name: Deploy da Documentação
+name: 📜 Deploy da Documentação no MKDocs
 
 on:
   push:
     branches:
       - master
+    paths-ignore:
+      - "README.md"
 
 permissions:
   contents: write
