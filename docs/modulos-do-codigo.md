@@ -84,7 +84,7 @@ Responsável por toda a comunicação com o Supabase. Contém o cliente singleto
 
 ---
 
-## 6.7 `src/utils.py` — Utilitários
+## `src/utils.py` — Utilitários
 
 * **`git_version() -> str`:** Detecta branch atual. Se `main`: busca tags `v*`. Caso contrário: busca `dev-v*`. Fallback: le versão do `CHANGELOG.md` com regex.
 * **`texto_para_audio(texto) -> BytesIO`:** Converte texto em MP3 via gTTS (pt-br). Aplica `limpeza_texto()` antes para remover Markdown e caracteres especiais.
@@ -92,19 +92,19 @@ Responsável por toda a comunicação com o Supabase. Contém o cliente singleto
 
 ---
 
-## 6.8 `startup_patch.py`
+## `startup_patch.py`
 
 Cria um modulo vazio e o registra em `sys.modules['torch.classes']`. Evita `ImportError` em ambientes como o Streamlit Cloud onde dependências indiretas tentam importar `torch.classes` na inicialização. **Deve ser importado como primeira linha do `vox_ai.py`.**
 
 ---
 
-## 6.9 `data/prompts/system_prompt.py`
+## `data/prompts/system_prompt.py`
 
 Contém a constante `INSTRUCOES` com o `system prompt` completo. Organizado em seções: Origem e Propósito, Pilares de Conhecimento, Diretrizes de Personalidade, Regras de Ouro (nunca inventar leis/endereços, zero tolerância a pornografia, respeito absoluto a pronomes) e parceria com a Casa de Cultura Marielle Franco.
 
 ---
 
-## 6.10 `data/prompts/ui_content.py`
+## `data/prompts/ui_content.py`
 
 Define as strings da interface: `SAUDACAO` (mensagem de boas-vindas), `SIDEBAR_BODY` (HTML da sidebar com links sociais) e `SIDEBAR_FOOTER` (HTML do rodapé com links legais e versão git). Usa f-strings com URLs de `external_links.py` e `git_version()`.
 

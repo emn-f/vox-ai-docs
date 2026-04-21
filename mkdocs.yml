@@ -67,11 +67,12 @@ nav:
   - Stack Tecnológica e Ferramentas: stack.md
   - Arquitetura do Sistema: arquitetura.md
   - Banco de Dados: banco-de-dados.md
-  - Cálculo Vetorial: calculo-vetorial.md
+  - Cálculo Vetorial: calculo-intro.md
   - Módulos do Código: modulos-do-codigo.md
   - CI/CD e Automação: ci-cd.md
   - Sistema de Segurança: sistema-de-seguranca.md
   - Testes Automatizados: testes-automatizados.md
+  - Git Cliff: git-cliff.md
   - Scripts Utilitários: scripts-utilitarios.md
   - Convenções do Projeto: convencoes-do-projeto.md
   - Como Rodar Localmente: como-rodar-localmente.md
