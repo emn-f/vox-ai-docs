@@ -1,8 +1,8 @@
-# 7. CI/CD e Automação (GitHub Actions)
+# CI/CD e Automação (GitHub Actions)
 
 O Vox AI possui 9 workflows do GitHub Actions que automatizam todo o ciclo de vida do software.
 
-## 7.1 Mapa dos Workflows
+## Mapa dos Workflows
 
 | Arquivo | Trigger | Descrição |
 |---|---|---|
@@ -16,7 +16,7 @@ O Vox AI possui 9 workflows do GitHub Actions que automatizam todo o ciclo de vi
 | `manual_release.yml` | `workflow_dispatch` (manual) | Cria release manual escolhendo `major/minor/patch` |
 | `push_homo.yml` | `workflow_dispatch` (manual) | Atualiza a branch `homo` com o conteúdo da `develop` |
 
-## 7.2 `production_pipeline.yml` — Pipeline Principal
+## `production_pipeline.yml` — Pipeline Principal
 
 Acionado em todo push para `main` (exceto mudanças apenas no `CHANGELOG.md`). Tem dois jobs sequenciais:
 
@@ -26,29 +26,29 @@ Acionado em todo push para `main` (exceto mudanças apenas no `CHANGELOG.md`). T
 
 > **Nota:** O commit do CHANGELOG usa `[skip ci]` para não disparar outro run do workflow e criar loop infinito.
 
-## 7.3 `security_review.yml`
+## `security_review.yml`
 
 Roda em toda PR que aponte para `develop` ou `main`. Executa `gatekeep/security_check.py` com `--mode pre-push`. Tem dependências isoladas em `gatekeep/requirements-gatekeep.txt`.
 
-## 7.4 `deploy_db.yml`
+## `deploy_db.yml`
 
 Acionado apenas quando arquivos em `supabase/migrations/**` são alterados. Instala o Supabase CLI, linka ao projeto de produção via `supabase link --project-ref $SUPABASE_PROJECT_ID`, e executa `supabase db push`.
 
 > **ATENÇÃO:** As migrations são IRREVERSÍVEIS em produção. Sempre revise o SQL antes de fazer `merge` para `main`.
 
-## 7.5 `deploy_hugging_face.yml`
+## `deploy_hugging_face.yml`
 
 Cria uma branch orfão (sem historico git) para um snapshot limpo, remove binarios de `docs/imgs`, e faz `git push --force` para a main do Hugging Face Spaces usando o token `HF_TOKEN`.
 
-## 7.6 `deploy_pages.yml`
+## `deploy_pages.yml`
 
 Injeta as credenciais do Supabase Dev nos placeholders `__SUPABASE_URL_DEV__` e `__SUPABASE_ANON_KEY_DEV__` do `pages/dashboard.js` usando `sed` antes do deploy. Isso permite que o Dashboard público acesse dados sem expor credenciais no código-fonte.
 
-## 7.7 `versioning_dev.yml`
+## `versioning_dev.yml`
 
 Em todo push para develop, calcula e cria tag no formato `dev-v{MAJOR}.{MINOR}.{PATCH}`. Nao gera changelog — apenas marca o commit para rastreabilidade.
 
-## 7.8 `manual_release.yml`
+## `manual_release.yml`
 
 Acionado manualmente com input de seleção: `patch`, `minor` ou `major`. Útil para releases com quebras de compatibilidade que não seriam gerados automaticamente pelo `production_pipeline`.
 

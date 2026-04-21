@@ -3,7 +3,7 @@ search:
   exclude: true
 ---
 
-# 2. Estrutura de Pastas e Arquivos
+# Estrutura de Pastas e Arquivos
 
 ```
 vox-ai/

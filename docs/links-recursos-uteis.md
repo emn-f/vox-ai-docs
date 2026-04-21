@@ -1,6 +1,6 @@
-# 15. Links e Recursos Úteis
+# Links e Recursos Úteis
 
-## 15.1 Projeto
+## Projeto
 
 | Recurso | URL |
 |---|---|
@@ -14,7 +14,7 @@
 | Sugestão de Conteúdo para KB | https://forms.gle/Bwb3NEurV7YoZFXG8 |
 | Email de contato | assistentedeapoiolgbtvox@gmail.com |
 
-## 15.2 Documentações das Ferramentas
+## Documentações das Ferramentas
 
 | Ferramenta | URL da Documentação |
 |---|---|
@@ -33,8 +33,3 @@
 | GNU GPLv3 | https://www.gnu.org/licenses/gpl-3.0.html |
 
 ---
-
-<div align="center">
-    <p>🤖 Vox AI: conversas que importam 🏳️‍🌈</p>
-
-</div>

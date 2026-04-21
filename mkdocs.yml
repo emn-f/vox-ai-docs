@@ -62,18 +62,19 @@ extra:
       name: Atendimento via WhatsApp
 
 nav:
-  - 1. Visão Geral: index.md
-  - 2. Estrutura de Pastas e Arquivos: 2-estrutura-do-projeto.md
-  - 3. Stack Tecnológica e Ferramentas: 3-stack.md
-  - 4. Arquitetura do Sistema: 4-arquitetura.md
-  - 5. Banco de Dados: 5-banco-de-dados.md
-  - 6. Módulos do Código: 6-modulos-do-codigo.md
-  - 7. CI/CD e Automação: 7-ci-cd.md
-  - 8. Sistema de Segurança: 8-sistema-de-seguranca.md
-  - 9. Testes Automatizados: 9-testes-automatizados.md
-  - 10. Scripts Utilitários: 10-scripts-utilitarios.md
-  - 11. Convenções do Projeto: 11-convencoes-do-projeto.md
-  - 12. Como Rodar Localmente: 12-como-rodar-localmente.md
-  - 13. Governança, Ética e Documentos Legais: 13-governanca-etica-docs-legais.md
-  - 14. Glossário: 14-glossario.md
-  - 15. Links e Recursos Úteis: 15-links-recursos-uteis.md
+  - Visão Geral: index.md
+  - Estrutura de Pastas e Arquivos: estrutura-do-projeto.md
+  - Stack Tecnológica e Ferramentas: stack.md
+  - Arquitetura do Sistema: arquitetura.md
+  - Banco de Dados: banco-de-dados.md
+  - Cálculo Vetorial: calculo-vetorial.md
+  - Módulos do Código: modulos-do-codigo.md
+  - CI/CD e Automação: ci-cd.md
+  - Sistema de Segurança: sistema-de-seguranca.md
+  - Testes Automatizados: testes-automatizados.md
+  - Scripts Utilitários: scripts-utilitarios.md
+  - Convenções do Projeto: convencoes-do-projeto.md
+  - Como Rodar Localmente: como-rodar-localmente.md
+  - Governança, Ética e Documentos Legais: governanca-etica-docs-legais.md
+  - Glossário: glossario.md
+  - Links e Recursos Úteis: links-recursos-uteis.md

@@ -1,6 +1,6 @@
-# 11. Convenções do Projeto
+# Convenções do Projeto
 
-## 11.1 Conventional Commits
+## Conventional Commits
 
 Formato: `tipo(escopo opcional): descrição em minúsculas`
 
@@ -17,7 +17,7 @@ Formato: `tipo(escopo opcional): descrição em minúsculas`
 | `build` | Dependências, sistema de build | Nao (pulado) | `build: atualiza streamlit para 1.52` |
 | `chore` | Tarefas internas diversas | Nao (pulado) | `chore: remove arquivos de cache` |
 
-## 11.2 Conventional Migrations
+## Conventional Migrations
 
 Formato: `<timestamp>_<verbo>_<objeto>_<contexto>.sql`
 
@@ -34,7 +34,7 @@ Formato: `<timestamp>_<verbo>_<objeto>_<contexto>.sql`
 
 > **ATENÇÃO:** NUNCA use nomes genéricos como `update_db`, `migration_1` ou `changes`. A migration deve ser autoexplicativa sem precisar abrir o SQL.
 
-## 11.3 Fluxo de Branches
+## Fluxo de Branches
 
 | Branch | Propósito | Regras |
 |---|---|---|

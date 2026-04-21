@@ -1,6 +1,6 @@
-# 9. Testes Automatizados
+# Testes Automatizados
 
-## 9.1 `conftest.py` — Fixtures Globais (`autouse=True`)
+##  `conftest.py` — Fixtures Globais (`autouse=True`)
 
 | Fixture | O que faz |
 |---|---|

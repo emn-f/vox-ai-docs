@@ -1,6 +1,6 @@
-# 5. Banco de Dados — Schema Completo (Supabase / PostgreSQL)
+# Banco de Dados — Schema Completo (Supabase / PostgreSQL)
 
-## 5.1 Visão Geral
+## Visão Geral
 
 O Vox AI usa o Supabase como backend de dados completo. O banco é PostgreSQL 17 com:
 
@@ -14,7 +14,7 @@ O Vox AI usa o Supabase como backend de dados completo. O banco é PostgreSQL 17
 
 Esta seção foi gerada diretamente a partir do dump do schema SQL do banco de produção.
 
-## 5.2 Extensões Ativas
+## Extensões Ativas
 
 | Extensão | Schema | Finalidade |
 |---|---|---|
@@ -25,9 +25,9 @@ Esta seção foi gerada diretamente a partir do dump do schema SQL do banco de p
 | **supabase_vault** | vault | Cofre seguro para armazenar segredos (API keys, tokens) diretamente no banco, criptografados. |
 | **uuid-ossp** | extensions | Gera UUIDs v1, v3, v4 e v5 via SQL. Usada para geração de IDs únicos em contextos SQL puros. |
 
-## 5.3 Tabelas
+## Tabelas
 
-### 5.3.1 `knowledge_base` — Base de Conhecimento
+### `knowledge_base` — Base de Conhecimento
 
 A tabela mais importante do sistema. Cada linha representa um "chunk" de conhecimento curado pela equipe. E aqui que o RAG busca as informações para embasar as respostas da IA.
 
@@ -47,7 +47,7 @@ A tabela mais importante do sistema. Cada linha representa um "chunk" de conheci
 
 > **Nota:** O `kb_id` e gerado automaticamente pelo banco usando a expressão `DEFAULT`. A sequence `kb_id_seq` é compartilhada entre `knowledge_base` e `knowledge_base_etl`, o que garante que os IDs são únicos globalmente entre as duas tabelas.
 
-### 5.3.2 `knowledge_base_etl` — Tabela de Staging (ETL)
+### `knowledge_base_etl` — Tabela de Staging (ETL)
 
 Tabela de staging com estrutura identica a `knowledge_base`, mas com a coluna `embedding` sem dimensão fixa (aceita qualquer tamanho de vetor). Usada para importar, processar e validar novos dados da curadoria antes de promove-los para a tabela principal. Possui os mesmos triggers de `modificado_em`.
 
@@ -59,7 +59,7 @@ Tabela de staging com estrutura identica a `knowledge_base`, mas com a coluna `e
 
 > **Nota:** Pense no `knowledge_base_etl` como uma "fila de aprovação": novos chunks entram aqui, são validados pela curadoria e depois movidos (INSERT + DELETE) para a `knowledge_base`, momento em que o embedding com dimensão correta é gerado.
 
-### 5.3.3 `sessions`
+### `sessions`
 
 | Coluna | Tipo SQL | Descrição |
 |---|---|---|
@@ -69,7 +69,7 @@ Tabela de staging com estrutura identica a `knowledge_base`, mas com a coluna `e
 
 > **Nota:** A tabela `sessions` é a âncora de integridade referencial do banco. As tabelas `chat_logs`, `error_logs` e `user_reports` tem FK para `sessions.session_id` com `ON DELETE RESTRICT`, ou seja, uma sessão só pode ser deletada se não houver registros dependentes.
 
-### 5.3.4 `chat_logs`
+### `chat_logs`
 
 | Coluna | Tipo SQL | Descrição |
 |---|---|---|
@@ -80,7 +80,7 @@ Tabela de staging com estrutura identica a `knowledge_base`, mas com a coluna `e
 | `git_version` | text | Versão do software no momento da conversa (para rastrear bugs em releases). |
 | `created_at` | timestamptz | Data e hora da interação. DEFAULT `now()`. |
 
-### 5.3.5 `chat_logs_kb` — Pivot de Auditoria RAG
+### `chat_logs_kb` — Pivot de Auditoria RAG
 
 Tabela fundamental para auditabilidade. Conecta cada resposta da IA (`chat_logs`) com os fragmentos exatos de conhecimento (`knowledge_base`) que foram usados para gerá-la. Permite rastrear a origem de possíveis alucinações e medir a utilidade de cada chunk.
 
@@ -94,7 +94,7 @@ Tabela fundamental para auditabilidade. Conecta cada resposta da IA (`chat_logs`
 
 > **Nota:** O INSERT nesta tabela aciona automaticamente o trigger `tg_update_kb_usage`, que chama `increment_kb_count()` e incrementa `kb_count` na `knowledge_base`. Isso cria um sistema automático de métricas de utilidade dos chunks sem nenhuma lógica extra no Python.
 
-### 5.3.6 `user_reports`
+### `user_reports`
 
 | Coluna | Tipo SQL | Descrição |
 |---|---|---|
@@ -106,7 +106,7 @@ Tabela fundamental para auditabilidade. Conecta cada resposta da IA (`chat_logs`
 | `git_version` | text | Versão do software para correlacionar com releases. |
 | `created_at` | timestamptz | Data do report. DEFAULT `now()`. |
 
-### 5.3.7 `report_categories`
+### `report_categories`
 
 Tabela de referencia com as categorias disponíveis para classificar um report. Possui COMMENT no schema: *"Tags para o erro que o usuário deseja reportar."*
 
@@ -117,7 +117,7 @@ Tabela de referencia com as categorias disponíveis para classificar um report. 
 | `description` | text | Descrição detalhada do que se enquadra nessa categoria. |
 | `created_at` | timestamptz | Data de criação. DEFAULT `now()`. |
 
-### 5.3.8 `error_logs`
+### `error_logs`
 
 | Coluna | Tipo SQL | Descrição |
 |---|---|---|
@@ -128,9 +128,9 @@ Tabela de referencia com as categorias disponíveis para classificar um report. 
 | `git_version` | text | Versão do software onde o erro foi detectado. |
 | `created_at` | timestamptz | Data e hora do erro. DEFAULT `now()`. |
 
-## 5.4 Funções PostgreSQL
+## Funções PostgreSQL
 
-### 5.4.1 `match_knowledge_base()` — Busca Vetorial RPC
+### `match_knowledge_base()` — Busca Vetorial RPC
 
 A função mais crítica do sistema. Executa a busca vetorial por similaridade de cosseno usando o operador `<=>` do pgvector. E exposta como RPC pelo Supabase e chamada pelo Python via `client.rpc()`.
 
@@ -153,7 +153,7 @@ CREATE OR REPLACE FUNCTION public.match_knowledge_base(
 
 > **Nota:** O operador `<=>` calcula a distância coseno entre dois vetores. A formula `1 - distância` converte isso em um score de similaridade entre 0 e 1, onde 1 significa idêntico e 0 significa completamente diferente. O threshold de 0.5 descarta resultados com mais de 50% de diferença semântica.
 
-### 5.4.2 `increment_kb_count()` — Trigger Function
+### `increment_kb_count()` — Trigger Function
 
 Função chamada automaticamente pelo trigger `tg_update_kb_usage` após cada INSERT na tabela `chat_logs_kb`. Incrementa o campo `kb_count` na `knowledge_base` para o `kb_id` recém-inserido.
 
@@ -169,7 +169,7 @@ end
 $$;
 ```
 
-### 5.4.3 `update_modificado_em()` — Trigger Function
+### `update_modificado_em()` — Trigger Function
 
 Função chamada automaticamente pelos triggers `update_kb_modificado_em` e `update_kb_etl_modificado_em` antes de qualquer UPDATE nas tabelas `knowledge_base` e `knowledge_base_etl`. Garante que o campo `modificado_em` seja sempre atualizado para o timestamp atual.
 
@@ -185,7 +185,7 @@ $$;
 
 > **Nota:** Este campo e utilizado pelo `dashboard.js` para calcular a "versão" da base de conhecimento. Formato: `v{ano}.{mes}.{dia}` baseado na data da última modificação.
 
-## 5.5 Triggers
+## Triggers
 
 | Nome do Trigger | Tabela | Evento | Momento | Função Chamada | Descrição |
 |---|---|---|---|---|---|
@@ -193,7 +193,7 @@ $$;
 | `update_kb_modificado_em` | knowledge_base | UPDATE | BEFORE | `update_modificado_em()` | Atualiza o timestamp `modificado_em` automaticamente em qualquer UPDATE na KB. |
 | `update_kb_etl_modificado_em` | knowledge_base_etl | UPDATE | BEFORE | `update_modificado_em()` | Mesma função, aplicada a tabela de staging ETL. |
 
-## 5.6 Índices
+## Índices
 
 | Nome | Tabela | Tipo | Coluna(s) | Finalidade |
 |---|---|---|---|---|
@@ -207,7 +207,7 @@ $$;
 
 > **Nota:** O índice HNSW (Hierarchical Navigable Small World) é um algoritmo de busca aproximada de vizinhos mais próximos. Ele constroi um grafo hierárquico de nos conectados e permite navegar para o vizinho mais próximo em tempo sub-linear. É a escolha padrão para produção com `pgvector`.
 
-## 5.7 Foreign Keys e Integridade Referencial
+## Foreign Keys e Integridade Referencial
 
 | Constraint | De | Para | ON UPDATE | ON DELETE |
 |---|---|---|---|---|
@@ -220,7 +220,7 @@ $$;
 
 > **Nota:** O `ON DELETE RESTRICT` na sessão significa que não e possivel deletar uma sessão diretamente enquanto houver registros dependentes. Para deletar uma sessão, é necessário primeiro deletar todos os `chat_logs`, `error_logs` e `user_reports` associados a ela.
 
-## 5.8 Row Level Security (RLS)
+## Row Level Security (RLS)
 
 RLS está habilitada em **todas** as tabelas do schema public. Por padrão, nenhum usuário pode ler ou escrever em nenhuma tabela sem uma policy explícita autorizando.
 
@@ -237,7 +237,7 @@ RLS está habilitada em **todas** as tabelas do schema public. Por padrão, nenh
 
 > **ATENÇÃO:** A chave `anon` do Supabase é segura de expor no frontend (Dashboard) porque as policies RLS garantem que mesmo com ela em mãos, um atacante so consegue fazer `SELECT` na `knowledge_base`. Todas as operações de escrita exigem a chave `service_role`, que fica apenas no backend/CI.
 
-## 5.9 Migrations
+## Migrations
 
 ### Migration 1: `20260410192141_remote_schema.sql`
 
@@ -260,7 +260,7 @@ ALTER TABLE public.knowledge_base
 
 > **ATENÇÃO:** Após esta migration, todos os registros tiveram seus embeddings zerados. Foi necessário rodar `scripts/gerar_embedding.py` para reindexar toda a base de conhecimento com os novos vetores de 1536 dimensões.
 
-## 5.10 Sequences (Auto-increment)
+## Sequences (Auto-increment)
 
 | Sequence | Tipo | Usada por | Comportamento |
 |---|---|---|---|

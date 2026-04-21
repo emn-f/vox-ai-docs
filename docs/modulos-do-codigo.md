@@ -1,6 +1,6 @@
-# 6. Módulos do Código — Referência Detalhada
+# Módulos do Código — Referência Detalhada
 
-## 6.1 `vox_ai.py` — Ponto de Entrada Principal
+## `vox_ai.py` — Ponto de Entrada Principal
 
 Arquivo principal da aplicação Streamlit. Orquestra todos os outros modulos. É o único arquivo executado diretamente pelo Streamlit (configurado como `app_file` no `pyproject.toml`).
 
@@ -21,7 +21,7 @@ O arquivo gerencia dois tipos de entrada: texto via `st.chat_input` e áudio via
 
 ---
 
-## 6.2 `src/config.py` — Configurações Globais
+## `src/config.py` — Configurações Globais
 
 Centraliza todas as constantes e configurações do sistema. Importado por praticamente todos os outros modulos.
 
@@ -41,7 +41,7 @@ Centraliza todas as constantes e configurações do sistema. Importado por prati
 
 ---
 
-## 6.3 `src/core/database.py` — Camada de Dados
+## `src/core/database.py` — Camada de Dados
 
 Responsável por toda a comunicação com o Supabase. Contém o cliente singleton e todas as funções de leitura/escrita.
 
@@ -57,7 +57,7 @@ Responsável por toda a comunicação com o Supabase. Contém o cliente singleto
 
 ---
 
-## 6.4 `src/core/genai.py` — Integração com Gemini
+## `src/core/genai.py` — Integração com Gemini
 
 * **`configurar_api_gemini() -> genai.Client`:** Cria o cliente da API Gemini. Armazena em `st.session_state.gemini_client`. Chama `st.stop()` se falhar.
 * **`inicializar_chat_modelo() -> chat`:** Gerencia dois históricos: `hist` (enviado ao modelo, comeca com `INSTRUCOES`) e `hist_exibir` (exibido na UI, começa vazio). Cria objeto de chat do Gemini com `GenerateContentConfig` contendo `system_instruction=INSTRUCOES`.
@@ -66,7 +66,7 @@ Responsável por toda a comunicação com o Supabase. Contém o cliente singleto
 
 ---
 
-## 6.5 `src/core/semantica.py` — Pipeline RAG
+## `src/core/semantica.py` — Pipeline RAG
 
 * **`semantica(prompt) -> tuple(str, str, list)`:** Gera o embedding do prompt via `gemini-embedding-001` com `task_type='RETRIEVAL_QUERY'` e delega para `recuperar_contexto_inteligente()`. Retorna `(fonte, contexto, ids)` ou `(None, None, None)`.
 
@@ -74,7 +74,7 @@ Responsável por toda a comunicação com o Supabase. Contém o cliente singleto
 
 ---
 
-## 6.6 `src/app/ui.py` — Interface de Usuário
+## `src/app/ui.py` — Interface de Usuário
 
 * **`configurar_pagina()`:** Define `page_title` e `page_icon` via `st.set_page_config()` e renderiza o cabeçalho.
 * **`carregar_css(path=CSS_PATH)`:** Lê o arquivo `static/css/style.css` e injeta via `st.markdown(unsafe_allow_html=True)`.

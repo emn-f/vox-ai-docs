@@ -1,6 +1,6 @@
-# 3. Stack Tecnológica e Ferramentas
+# Stack Tecnológica e Ferramentas
 
-## 3.1 Core da Aplicação
+## Core da Aplicação
 
 | Ferramenta | Versão | Contexto no Vox AI | Docs Oficiais |
 |---|---|---|---|
@@ -10,7 +10,7 @@
 | gTTS | 2.5.4 | Text-to-Speech: converte respostas em áudio MP3 com voz pt-BR | [gtts.readthedocs.io](https://gtts.readthedocs.io/en/latest/) |
 | python-dotenv | 1.2.1 | Carregamento de variáveis de ambiente para desenvolvimento local | [pypi.org/project/python-dotenv](https://pypi.org/project/python-dotenv/) |
 
-## 3.2 Inteligência Artificial
+## Inteligência Artificial
 
 | Ferramenta | Contexto no Vox AI | Docs Oficiais |
 |---|---|---|
@@ -18,7 +18,7 @@
 | Gemini Flash (gemini-3-flash-preview) | Modelo LLM principal. Recebe o system prompt + contexto RAG e gera as respostas em streaming | [ai.google.dev/gemini-api/docs/models](https://ai.google.dev/gemini-api/docs/models?hl=pt-br) |
 | Gemini Embeddings (gemini-embedding-001) | Modelo de embeddings. Converte textos em vetores de 1536 dimensões para busca semântica | [ai.google.dev/gemini-api/docs/embeddings](https://ai.google.dev/gemini-api/docs/embeddings?hl=pt-br) |
 
-## 3.3 Banco de Dados
+## Banco de Dados
 
 | Ferramenta | Contexto no Vox AI | Docs Oficiais |
 |---|---|---|
@@ -27,7 +27,7 @@
 | pgvector (extensão vector) | Adiciona o tipo vector, operador de distância cosseno (<=>) e índices HNSW para busca semântica | [github.com/pgvector/pgvector](https://github.com/pgvector/pgvector) |
 | Supabase CLI | Gerencia o projeto localmente, gera e aplica migrations via `db diff`/`push` | [supabase.com/docs/guides/cli](supabase.com/docs/guides/cli) |
 
-## 3.4 DevOps e CI/CD
+## DevOps e CI/CD
 
 | Ferramenta | Contexto no Vox AI | Docs Oficiais |
 |---|---|---|

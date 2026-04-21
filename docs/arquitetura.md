@@ -1,10 +1,10 @@
-# 4. Arquitetura do Sistema
+# Arquitetura do Sistema
 
-## 4.1 Visão Geral
+## Visão Geral
 
 O Vox AI e uma aplicação monolítica em Python construída sobre Streamlit. Não há backend separado: o Streamlit gerencia o estado da sessão, a UI e orquestra as chamadas aos serviços externos (Gemini API e Supabase). Toda a lógica de negócio fica nos modulos da pasta `src/`.
 
-## 4.2 Fluxo de Execução Principal
+## Fluxo de Execução Principal
 
 1. O usuário digita uma pergunta (texto) ou grava um áudio no chat Streamlit (`vox_ai.py`).
 2. Se for áudio, o arquivo é enviado para `transcrever_audio()` em `genai.py`, que usa o Gemini para transcrição para pt-BR.
@@ -16,7 +16,7 @@ O Vox AI e uma aplicação monolítica em Python construída sobre Streamlit. N�
 8. O Gemini gera a resposta em streaming, exibida letra por letra na interface.
 9. O log (prompt, resposta, IDs dos chunks usados, versão git) é salvo assincronamente no Supabase.
 
-## 4.3 Estratégia RAG (Retrieval-Augmented Generation)
+## Estratégia RAG (Retrieval-Augmented Generation)
 
 O coração inteligente do Vox AI é sua estratégia de recuperacao de conhecimento. O sistema não usa um RAG ingênuo — ele analisa os resultados para decidir como deve proceder.
 
@@ -30,11 +30,11 @@ Ativada quando um mesmo tópico aparece **3 ou mais vezes** nos 10 primeiros res
 
 Ativada quando os resultados são dispersos (nenhum tópico domina com 3+ votos). O sistema usa apenas os 5 fragmentos mais similares, que podem ser de temas diferentes. Útil para perguntas gerais ou interdisciplinares.
 
-## 4.4 Sistema de `Sessions`
+## Sistema de `Sessions`
 
 Cada usuário que acessa o Vox AI recebe um UUID único gerado pelo `uuid.uuid4()`. Este identificador anônimo é salvo na tabela `sessions` do Supabase e usado para correlacionar logs de chat, erros e reports. O ID vive apenas na sessão do Streamlit (`st.session_state`) e nunca é exposto ao usuário.
 
-## 4.5 Configuração e Segredos
+## Configuração e Segredos
 
 A função `get_secret()` em `src/config.py` implementa sistema de fallback: primeiro tenta `st.secrets` (Streamlit Cloud / `.streamlit/secrets.toml`), depois as variáveis de ambiente do sistema.
 

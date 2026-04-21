@@ -1,4 +1,4 @@
-# 14. Glossário
+# Glossário
 
 | Termo | Definição |
 |---|---|

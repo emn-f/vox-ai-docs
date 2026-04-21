@@ -3,9 +3,9 @@
 > Repositório principal do Vox AI: [https://github.com/emn-f/vox-ai](https://github.com/emn-f/vox-ai/tree/develop)
 
 
-## 1. Visão Geral do Projeto
+## Visão Geral do Projeto
 
-### 1.1 O que é o Vox AI?
+### O que é o Vox AI?
 
 O Vox AI é um chatbot de código aberto (open-source) voltado para apoio e informação à comunidade LGBTQIA+ no Brasil. Seu objetivo é ser um espaço digital seguro que oferece informações confiáveis, orientação sobre direitos, saúde e cidadania, além de acolhimento emocional — com foco especial na realidade de Salvador, Bahia.
 
@@ -13,14 +13,14 @@ O projeto nasceu da iniciativa de Emanuel Ferreira (Graduando em Engenharia de S
 
 [Deploy Vox AI](https://vox-ai.streamlit.app/)
 
-### 1.2 Missão e Pilares
+### Missão e Pilares
 
 - **Direitos e Legislação:** Leis antidiscriminação, retificação de nome/gênero, casamento civil, adoção.
 - **Saúde Integral:** Processo transexualizador no SUS, prevenção (PrEP/PEP), saúde mental.
 - **Rede de Apoio:** Mapeamento de ONGs, casas de acolhida e delegacias especializadas.
 - **Cidadania:** Acesso a serviços públicos sem discriminação.
 
-### 1.3 Deploy e Ambientes
+### Deploy e Ambientes
 
 | Ambiente | URL | Descrição |
 |---|---|---|
@@ -29,7 +29,7 @@ O projeto nasceu da iniciativa de Emanuel Ferreira (Graduando em Engenharia de S
 | Dashboard | [emn-f.github.io/vox-ai/](emn-f.github.io/vox-ai/) | Portal de transparência (GitHub Pages) |
 | Repositório | [github.com/emn-f/vox-ai](github.com/emn-f/vox-ai) | Código-fonte principal |
 
-### 1.4 Equipe
+### Equipe
 
 - **Liderança Técnica:** [Emanuel Ferreira](https://github.com/emn-f/vox-ai)
 - **Outros colaboradores:** Alicia Batista, Brenda Pires, Fernanda Souza, Kauã Araújo, Lucca Pertigas, Márcio Ventura
