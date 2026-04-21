@@ -1,1 +1,79 @@
-site_name: My Docs
+site_name: Vox AI | Documentação Técnica
+
+theme:
+  name: material
+  language: pt-BR
+  logo: assets/rainbow.png
+  favicon: assets/rainbow.png
+  features:
+    - navigation.sections
+
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: purple
+      accent: red
+      toggle:
+        icon: material/brightness-7
+        name: Mudar para o modo noturno
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: purple
+      accent: red
+      toggle:
+        icon: material/brightness-4
+        name: Mudar para o modo claro
+
+markdown_extensions:
+  - toc:
+      toc_depth: 5
+      permalink: true
+
+copyright: "© Vox AI: conversas que importam | Licença GNU GPLv3"
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/emn-f/vox-ai
+      name: Repositório Principal
+
+    - icon: fontawesome/brands/instagram
+      link: https://www.instagram.com/projetovoxai/
+
+    - icon: material/link-variant
+      link: https://linktr.ee/vox_ai
+      name: Linktree do Projeto
+
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/assistentevox/
+      name: Vox no LinkedIn
+      
+    - icon: fontawesome/brands/medium
+      link: https://medium.com/@emnferreira/do-mvp-ao-rag-como-o-vox-ai-evoluiu-de-planilhas-para-uma-arquitetura-escalável-com-supabase-4c51b951ed56
+      name: Artigos mais recente no Medium
+      
+    - icon: material/email
+      link: mailto:assistentedeapoiolgbtvox@gmail.com
+      name: Contato por E-mail
+    
+    - icon: fontawesome/brands/whatsapp
+      link: https://wa.me/5571992348839
+      name: Atendimento via WhatsApp
+
+nav:
+  - 1. Visão Geral: index.md
+  - 2. Estrutura de Pastas e Arquivos: 2-estrutura-do-projeto.md
+  - 3. Stack Tecnológica e Ferramentas: 3-stack.md
+  - 4. Arquitetura do Sistema: 4-arquitetura.md
+  - 5. Banco de Dados: 5-banco-de-dados.md
+  - 6. Módulos do Código: 6-modulos-do-codigo.md
+  - 7. CI/CD e Automação: 7-ci-cd.md
+  - 8. Sistema de Segurança: 8-sistema-de-seguranca.md
+  - 9. Testes Automatizados: 9-testes-automatizados.md
+  - 10. Scripts Utilitários: 10-scripts-utilitarios.md
+  - 11. Convenções do Projeto: 11-convencoes-do-projeto.md
+  - 12. Como Rodar Localmente: 12-como-rodar-localmente.md
+  - 13. Governança, Ética e Documentos Legais: 13-governanca-etica-docs-legais.md
+  - 14. Glossário: 14-glossario.md
+  - 15. Links e Recursos Úteis: 15-links-recursos-uteis.md
