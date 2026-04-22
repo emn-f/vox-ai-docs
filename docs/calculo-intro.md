@@ -121,9 +121,13 @@ Camada 0 (densa):  •──•──•──•──•──•──•─�
 ```
 
 **Algoritmo de busca:**
+
 1. Começa em um nó de entrada aleatório na camada superior (mais esparsa).
+
 2. Em cada camada, avança em direção ao vizinho mais próximo da query.
+
 3. Desce para a camada inferior quando não há mais progresso.
+
 4. Na camada 0, executa busca local greedy para refinar os candidatos.
 
 **Resultado:** Complexidade aproximada de **O(log n)** para encontrar os k vizinhos mais próximos, com uma pequena perda de precisão em troca de velocidade muito superior (busca aproximada, não exata).
@@ -199,7 +203,7 @@ Pergunta do usuário: "Como funciona o processo de retificação de nome?"
   ┌────────────────────────────────────────┬────────────┬───────────┐
   │ content                                │ topic      │ similarity│
   ├────────────────────────────────────────┼────────────┼───────────┤
-  │ "Para retificar o nome, é necessário..."│ retificacao│  0.912    │
+  │ "Para retificar o nome, é preciso...  "│ retificacao│  0.912    │
   │ "A Lei nº 14.931 estabelece..."        │ retificacao│  0.887    │
   │ "O cartório deve aceitar o pedido..."  │ retificacao│  0.843    │
   │ "Documentos necessários: RG, CPF..."   │ retificacao│  0.798    │
