@@ -23,8 +23,11 @@ sim(a, b) = ─────────────
 ```
 
 Onde:
+
 - `a · b` é o **produto escalar** (dot product): `Σ(aᵢ × bᵢ)` para i de 1 a 1536
+
 - `‖a‖` é a **norma euclidiana** de `a`: `√(Σaᵢ²)`
+
 - O resultado está sempre no intervalo `[-1, 1]`
 
 **Interpretação dos valores:**
@@ -47,8 +50,11 @@ distância_cosseno(a, b) = 1 - sim(a, b)
 ```
 
 Portanto:
+
 - Distância `0.0` = vetores idênticos (similaridade 1.0)
+
 - Distância `0.5` = similaridade moderada (similaridade 0.5)
+
 - Distância `1.0` = sem relação (similaridade 0.0)
 
 A função SQL `match_knowledge_base` no Supabase converte isso de volta para similaridade:
@@ -131,6 +137,7 @@ WITH (m = 16, ef_construction = 64);
 ```
 
 - `m = 16`: número de conexões por nó no grafo (maior = mais preciso, mais memória)
+
 - `ef_construction = 64`: tamanho do beam search durante a construção (maior = grafo melhor, construção mais lenta)
 
 
