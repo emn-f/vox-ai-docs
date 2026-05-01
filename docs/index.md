@@ -32,11 +32,11 @@ O projeto nasceu da iniciativa de Emanuel Ferreira (Graduando em Engenharia de S
 ### Equipe
 
 - **Tech Lead:** [Emanuel Ferreira](https://github.com/emn-f/vox-ai)
-- Desenvolvedores: [@rodrigosantos-eng](https://github.com/rodrigosantos-eng)
+- **Desenvolvedores:** [Emanuel Ferreira](https://github.com/emn-f/vox-ai) e [@rodrigosantos-eng](https://github.com/rodrigosantos-eng)
 - **Outros colaboradores:** Alicia Batista, Brenda Pires, Fernanda Souza, Kauã Araújo, Lucca Pertigas, Márcio Ventura
 - **Parceira Institucional:** [Casa de Cultura Marielle Franco](linktr.ee/casamariellefrancobr) (Salvador - BA)
 
 
-> Última atualização por Emanuel Ferreira em 20/04/2026 (v3.3.6)
+> Última atualização por Emanuel Ferreira em 20/04/2026
 
 ---
