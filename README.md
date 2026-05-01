@@ -38,23 +38,41 @@ Este repositório contém a documentação técnica do Vox AI construída com **
 
 - **Python 3.10+** instalado
 - **Git** instalado
-- **pip** ou **uv** (gerenciador de pacotes)
+- **pip** (gerenciador de pacote)
 
 ### Setup Rápido
 
-```bash
 # 1. Clone o repositório
+```bash
 git clone https://github.com/emn-f/vox-ai-docs.git
 cd vox-ai-docs
-
-# 2. Instale as dependências
-pip install -r requirements.txt
-
-# 3. Execute o servidor de desenvolvimento
-mkdocs serve
-
-# 4. Acesse em http://localhost:8000
 ```
+
+# 2. Crie um ambiente virtual (recomendado)
+```bash
+python -m venv venv
+```
+
+# 3. Ative o ambiente virtual
+```bash
+# No Windows:
+venv\Scripts\activate
+# No macOS/Linux:
+source venv/bin/activate
+```
+
+# 4. Instale as dependências (mkdocs, mkdocs-material e outras)
+```bash
+pip install -r requirements.txt
+```
+
+# 5. Execute o servidor de desenvolvimento
+```bash
+mkdocs serve
+```
+# 6. Acesse em http://localhost:8000
+
+> **💡 Importante:** Sempre use um ambiente virtual para evitar conflitos de dependências globais. O arquivo `.gitignore` já está configurado para ignorar a pasta `venv/`.
 
 ### Adicionar Novas Páginas
 
@@ -68,11 +86,6 @@ nav:
   - Minha Nova Página: nova-pagina.md
 ```
 
-### Compilar para Produção
-
-```bash
-mkdocs build
-```
 
 Os arquivos serão gerados em `site/`
 
