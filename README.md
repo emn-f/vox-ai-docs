@@ -30,9 +30,63 @@ O Vox AI utiliza duas estratégias inteligentes de recuperação para garantir p
 
 Toda a infraestrutura é monitorada por um sistema de **Auditoria RAG**, que vincula cada resposta da IA aos fragmentos exatos de conhecimento utilizados no banco de dados.
 
+## � Configuração Local (Para Colaboradores)
+
+Este repositório contém a documentação técnica do Vox AI construída com **MkDocs** e o tema **Material**.
+
+### Pré-requisitos
+
+- **Python 3.10+** instalado
+- **Git** instalado
+- **pip** ou **uv** (gerenciador de pacotes)
+
+### Setup Rápido
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/emn-f/vox-ai-docs.git
+cd vox-ai-docs
+
+# 2. Instale as dependências
+pip install -r requirements.txt
+
+# 3. Execute o servidor de desenvolvimento
+mkdocs serve
+
+# 4. Acesse em http://localhost:8000
+```
+
+### Adicionar Novas Páginas
+
+1. Crie um arquivo `.md` em `docs/`
+2. Adicione o arquivo ao `mkdocs.yml` na seção `nav`
+
+Exemplo:
+```yaml
+nav:
+  - Home: index.md
+  - Minha Nova Página: nova-pagina.md
+```
+
+### Compilar para Produção
+
+```bash
+mkdocs build
+```
+
+Os arquivos serão gerados em `site/`
+
+### 📚 Documentação MkDocs
+
+- [MkDocs Documentation](https://www.mkdocs.org/)
+- [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
+
 ## 💻 Quer contribuir?
 
 Toda ajuda é bem vinda! Saiba mais no nosso [Guia de Contribuição](https://github.com/emn-f/vox-ai?tab=contributing-ov-file).
 
+**Dúvidas sobre a documentação?** Abra uma issue ou entre em contato: [assistentedeapoiolgbtvox@gmail.com](mailto:assistentedeapoiolgbtvox@gmail.com)
+
+---
 
 *🤖 Vox AI: conversas que importam 🏳️‍🌈*
