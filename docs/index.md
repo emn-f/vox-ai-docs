@@ -25,16 +25,16 @@ O projeto nasceu da iniciativa de Emanuel Ferreira (Graduando em Engenharia de S
 | Ambiente | URL | Descrição |
 |---|---|---|
 | Produção (Principal) | [vox-ai.streamlit.app](https://vox-ai.streamlit.app/) | App Streamlit Cloud |
-| Mirror | [huggingface.co/spaces/emn-f/vox-ai](huggingface.co/spaces/emn-f/vox-ai) | Espelhamento automático após cada release |
-| Dashboard | [emn-f.github.io/vox-ai/](emn-f.github.io/vox-ai/) | Portal de transparência (GitHub Pages) |
-| Repositório | [github.com/emn-f/vox-ai](github.com/emn-f/vox-ai) | Código-fonte principal |
+| Mirror | [huggingface.co/spaces/emn-f/vox-ai](https://huggingface.co/spaces/emn-f/vox-ai) | Espelhamento automático após cada release |
+| Dashboard | [emn-f.github.io/vox-ai/](https://emn-f.github.io/vox-ai/) | Portal de transparência (GitHub Pages) |
+| Repositório | [github.com/emn-f/vox-ai](https://github.com/emn-f/vox-ai) | Código-fonte principal |
 
 ### Equipe
 
 - **Tech Lead:** [Emanuel Ferreira](http://linkedin.com/in/emanuelferreira)
 - **Desenvolvedores:** [@emn-f](https://github.com/emn-f) e [@rodrigosantos-eng](https://github.com/rodrigosantos-eng)
 - **Outros colaboradores:** Alicia Batista, Brenda Pires, Fernanda Souza, Kauã Araújo, Lucca Pertigas, Márcio Ventura
-- **Parceira Institucional:** [Casa de Cultura Marielle Franco](linktr.ee/casamariellefrancobr) (Salvador - BA)
+- **Parceira Institucional:** [Casa de Cultura Marielle Franco](https://linktr.ee/casamariellefrancobr) (Salvador - BA)
 
 
 > Última atualização por Emanuel Ferreira em 20/04/2026
