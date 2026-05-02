@@ -25,16 +25,16 @@
 | Supabase | Backend-as-a-Service completo: PostgreSQL, API REST automática, RLS, SDK Python e dashboard | [supabase.com/docs](https://supabase.com/docs) |
 | PostgreSQL 17 | Banco relacional onde ficam todas as tabelas, funções, triggers e índices | [postgresql.org/docs](https://www.postgresql.org/docs/17/index.html) |
 | pgvector (extensão vector) | Adiciona o tipo vector, operador de distância cosseno (<=>) e índices HNSW para busca semântica | [github.com/pgvector/pgvector](https://github.com/pgvector/pgvector) |
-| Supabase CLI | Gerencia o projeto localmente, gera e aplica migrations via `db diff`/`push` | [supabase.com/docs/guides/cli](supabase.com/docs/guides/cli) |
+| Supabase CLI | Gerencia o projeto localmente, gera e aplica migrations via `db diff`/`push` | [supabase.com/docs/guides/cli](https://supabase.com/docs/guides/cli) |
 
 ## DevOps e CI/CD
 
 | Ferramenta | Contexto no Vox AI | Docs Oficiais |
 |---|---|---|
 | GitHub Actions | Plataforma de CI/CD. Orquestra os 9 workflows: testes, releases, deploys e seguranca | [docs.github.com/actions](https://docs.github.com/pt/actions) |
-| Git Cliff (git-cliff) | Gerador de CHANGELOG.md automático a partir de Conventional Commits e tags Git | [git-cliff.org/docs](git-cliff.org/docs) |
+| Git Cliff (git-cliff) | Gerador de CHANGELOG.md automático a partir de Conventional Commits e tags Git | [git-cliff.org/docs](https://git-cliff.org/docs) |
 | Pytest | Framework de testes Python. Roda testes unitários e de integração no pipeline | [docs.pytest](https://docs.pytest.org/en/stable/) |
-| Hugging Face Spaces | Plataforma de deploy alternativa (mirror). App Streamlit sincronizado após cada release | [huggingface.co/docs/hub/spaces](huggingface.co/docs/hub/spaces) |
-| GitHub Pages | Hospedagem estática do Dashboard de transparencia pública | [docs.github.com/pages](docs.github.com/pages) |
+| Hugging Face Spaces | Plataforma de deploy alternativa (mirror). App Streamlit sincronizado após cada release | [huggingface.co/docs/hub/spaces](https://huggingface.co/docs/hub/spaces) |
+| GitHub Pages | Hospedagem estática do Dashboard de transparencia pública | [docs.github.com/pages](https://docs.github.com/pages) |
 
 ---
