@@ -1,0 +1,2202 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../arquitetura/">
+      
+      
+        <link rel="next" href="../calculo-intro/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/rainbow.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Banco de Dados - Vox AI | Documentação Técnica</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#banco-de-dados-schema-completo-supabase-postgresql" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="Vox AI | Documentação Técnica" class="md-header__button md-logo" aria-label="Vox AI | Documentação Técnica" data-md-component="logo">
+      
+  <img src="../assets/rainbow.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vox AI | Documentação Técnica
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Banco de Dados
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="red"  aria-label="Mudar para o modo noturno"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para o modo noturno" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="purple" data-md-color-accent="red"  aria-label="Mudar para o modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para o modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Vox AI | Documentação Técnica" class="md-nav__button md-logo" aria-label="Vox AI | Documentação Técnica" data-md-component="logo">
+      
+  <img src="../assets/rainbow.png" alt="logo">
+
+    </a>
+    Vox AI | Documentação Técnica
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão Geral
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../estrutura-do-projeto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estrutura de Pastas e Arquivos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stack Tecnológica e Ferramentas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arquitetura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura do Sistema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#visao-geral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visão Geral
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extensoes-ativas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extensões Ativas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tabelas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tabelas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tabelas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#knowledge_base-base-de-conhecimento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        knowledge_base — Base de Conhecimento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#knowledge_base_etl-tabela-de-staging-etl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        knowledge_base_etl — Tabela de Staging (ETL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sessions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat_logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        chat_logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat_logs_kb-pivot-de-auditoria-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        chat_logs_kb — Pivot de Auditoria RAG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user_reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user_reports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report_categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        report_categories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error_logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        error_logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#funcoes-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Funções PostgreSQL
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Funções PostgreSQL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#match_knowledge_base-busca-vetorial-rpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        match_knowledge_base() — Busca Vetorial RPC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#increment_kb_count-trigger-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        increment_kb_count() — Trigger Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update_modificado_em-trigger-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        update_modificado_em() — Trigger Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Triggers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Índices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#foreign-keys-e-integridade-referencial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foreign Keys e Integridade Referencial
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#row-level-security-rls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Row Level Security (RLS)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migrations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Migrations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#migration-1-20260410192141_remote_schemasql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration 1: 20260410192141_remote_schema.sql
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migration-2-20260418194905_alter_vetor_tamanho_1536_knowledge_basesql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration 2: 20260418194905_alter_vetor_tamanho_1536_knowledge_base.sql
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sequences-auto-increment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequences (Auto-increment)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../calculo-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cálculo Vetorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modulos-do-codigo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Módulos do Código
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ci-cd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CI/CD e Automação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sistema-de-seguranca/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sistema de Segurança
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testes-automatizados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testes Automatizados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../git-cliff/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Cliff
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scripts-utilitarios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scripts Utilitários
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../convencoes-do-projeto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Convenções do Projeto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../como-rodar-localmente/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Como Rodar Localmente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../governanca-etica-docs-legais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governança, Ética e Documentos Legais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../links-recursos-uteis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Links e Recursos Úteis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#visao-geral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visão Geral
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extensoes-ativas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extensões Ativas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tabelas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tabelas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tabelas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#knowledge_base-base-de-conhecimento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        knowledge_base — Base de Conhecimento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#knowledge_base_etl-tabela-de-staging-etl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        knowledge_base_etl — Tabela de Staging (ETL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sessions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat_logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        chat_logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat_logs_kb-pivot-de-auditoria-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        chat_logs_kb — Pivot de Auditoria RAG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user_reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user_reports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report_categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        report_categories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error_logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        error_logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#funcoes-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Funções PostgreSQL
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Funções PostgreSQL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#match_knowledge_base-busca-vetorial-rpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        match_knowledge_base() — Busca Vetorial RPC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#increment_kb_count-trigger-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        increment_kb_count() — Trigger Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update_modificado_em-trigger-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        update_modificado_em() — Trigger Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Triggers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Índices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#foreign-keys-e-integridade-referencial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foreign Keys e Integridade Referencial
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#row-level-security-rls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Row Level Security (RLS)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migrations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Migrations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#migration-1-20260410192141_remote_schemasql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration 1: 20260410192141_remote_schema.sql
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migration-2-20260418194905_alter_vetor_tamanho_1536_knowledge_basesql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration 2: 20260418194905_alter_vetor_tamanho_1536_knowledge_base.sql
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sequences-auto-increment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequences (Auto-increment)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="banco-de-dados-schema-completo-supabase-postgresql">Banco de Dados — Schema Completo (Supabase / PostgreSQL)<a class="headerlink" href="#banco-de-dados-schema-completo-supabase-postgresql" title="Permanent link">&para;</a></h1>
+<h2 id="visao-geral">Visão Geral<a class="headerlink" href="#visao-geral" title="Permanent link">&para;</a></h2>
+<p>O Vox AI usa o Supabase como backend de dados completo. O banco é PostgreSQL 17 com:</p>
+<ul>
+<li><strong>7 tabelas</strong></li>
+<li><strong>3 funções customizadas</strong> (incluindo 2 usadas como triggers)</li>
+<li><strong>3 triggers ativas</strong></li>
+<li><strong>7 índices de performance</strong> (incluindo 1 HNSW para busca vetorial)</li>
+<li><strong>6 constraints de chave estrangeira</strong></li>
+<li><strong>RLS (Row Level Security) habilitada em todas as tabelas</strong></li>
+<li><strong>5 extensões ativas</strong></li>
+</ul>
+<p>Esta seção foi gerada diretamente a partir do dump do schema SQL do banco de produção.</p>
+<h2 id="extensoes-ativas">Extensões Ativas<a class="headerlink" href="#extensoes-ativas" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Extensão</th>
+<th>Schema</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>vector</strong></td>
+<td>public</td>
+<td>Adiciona o tipo <code>vector</code>, o operador de distância coseno (<code>&lt;=&gt;</code>), funções de similaridade e suporte a índices HNSW. É o núcleo do sistema RAG.</td>
+</tr>
+<tr>
+<td><strong>pg_graphql</strong></td>
+<td>graphql</td>
+<td>Expoe o schema do banco como uma API GraphQL automaticamente. Usado pelo Supabase Studio.</td>
+</tr>
+<tr>
+<td><strong>pg_stat_statements</strong></td>
+<td>extensions</td>
+<td>Coleta estatísticas de execução de queries SQL (tempo, chamadas, rows). Útil para profiling e otimização.</td>
+</tr>
+<tr>
+<td><strong>pgcrypto</strong></td>
+<td>extensions</td>
+<td>Funções criptográficas (hash, UUID, criptografia simetrica). Usada internamente pelo Supabase Auth.</td>
+</tr>
+<tr>
+<td><strong>supabase_vault</strong></td>
+<td>vault</td>
+<td>Cofre seguro para armazenar segredos (API keys, tokens) diretamente no banco, criptografados.</td>
+</tr>
+<tr>
+<td><strong>uuid-ossp</strong></td>
+<td>extensions</td>
+<td>Gera UUIDs v1, v3, v4 e v5 via SQL. Usada para geração de IDs únicos em contextos SQL puros.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tabelas">Tabelas<a class="headerlink" href="#tabelas" title="Permanent link">&para;</a></h2>
+<h3 id="knowledge_base-base-de-conhecimento"><code>knowledge_base</code> — Base de Conhecimento<a class="headerlink" href="#knowledge_base-base-de-conhecimento" title="Permanent link">&para;</a></h3>
+<p>A tabela mais importante do sistema. Cada linha representa um "chunk" de conhecimento curado pela equipe. E aqui que o RAG busca as informações para embasar as respostas da IA.</p>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo SQL</th>
+<th>Nullable</th>
+<th>Default</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kb_id</code></td>
+<td>text</td>
+<td>NOT NULL</td>
+<td><code>'vox-kb-' \|\| lpad(nextval('kb_id_seq'),4,'0')</code></td>
+<td>PK. ID legivel gerado automaticamente (ex: <code>vox-kb-0001</code>). Usa a sequence <code>kb_id_seq</code> compartilhada com a tabela ETL.</td>
+</tr>
+<tr>
+<td><code>topico</code></td>
+<td>text</td>
+<td>NULL</td>
+<td>—</td>
+<td>Nome do tópico macro (ex: "PrEP"). Indexado (<code>idx_kb_topico</code>).</td>
+</tr>
+<tr>
+<td><code>eixo_tematico</code></td>
+<td>text</td>
+<td>NULL</td>
+<td>—</td>
+<td>Eixo temático superior (ex: "Saúde"). Indexado (<code>idx_kb_eixo</code>).</td>
+</tr>
+<tr>
+<td><code>descricao</code></td>
+<td>text</td>
+<td>NOT NULL</td>
+<td>—</td>
+<td>O texto do conhecimento em si. É este campo que é convertido em vetor e recuperado pelo RAG.</td>
+</tr>
+<tr>
+<td><code>referencias</code></td>
+<td>text</td>
+<td>NULL</td>
+<td>—</td>
+<td>Fontes e referências bibliográficas do conhecimento.</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>text[]</td>
+<td>NULL</td>
+<td>—</td>
+<td>Array de tags para categorização auxiliar.</td>
+</tr>
+<tr>
+<td><code>autor</code></td>
+<td>text</td>
+<td>NULL</td>
+<td>—</td>
+<td>Responsável pela inserção do chunk.</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamptz</td>
+<td>NULL</td>
+<td><code>now()</code></td>
+<td>Data de criação do registro.</td>
+</tr>
+<tr>
+<td><code>kb_count</code></td>
+<td>numeric</td>
+<td>NULL</td>
+<td>—</td>
+<td>Contador de quantas vezes o chunk foi recuperado. Incrementado automaticamente pela trigger <code>tg_update_kb_usage</code>.</td>
+</tr>
+<tr>
+<td><code>embedding</code></td>
+<td>vector(1536)</td>
+<td>NULL</td>
+<td>—</td>
+<td>Vetor semântico de 1536 dimensões. Indexado com HNSW (<code>idx_kb_embedding</code>). Gerado pelo modelo <code>gemini-embedding-001</code>.</td>
+</tr>
+<tr>
+<td><code>modificado_em</code></td>
+<td>timestamptz</td>
+<td>NULL</td>
+<td><code>now()</code></td>
+<td>Data da última modificação. Atualizado automaticamente pela trigger <code>update_kb_modificado_em</code>.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Nota:</strong> O <code>kb_id</code> e gerado automaticamente pelo banco usando a expressão <code>DEFAULT</code>. A sequence <code>kb_id_seq</code> é compartilhada entre <code>knowledge_base</code> e <code>knowledge_base_etl</code>, o que garante que os IDs são únicos globalmente entre as duas tabelas.</p>
+</blockquote>
+<h3 id="knowledge_base_etl-tabela-de-staging-etl"><code>knowledge_base_etl</code> — Tabela de Staging (ETL)<a class="headerlink" href="#knowledge_base_etl-tabela-de-staging-etl" title="Permanent link">&para;</a></h3>
+<p>Tabela de staging com estrutura identica a <code>knowledge_base</code>, mas com a coluna <code>embedding</code> sem dimensão fixa (aceita qualquer tamanho de vetor). Usada para importar, processar e validar novos dados da curadoria antes de promove-los para a tabela principal. Possui os mesmos triggers de <code>modificado_em</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Diferenca em relacao a <code>knowledge_base</code></th>
+<th>Detalhe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Coluna <code>embedding</code></td>
+<td><code>vector</code> sem dimensão fixa — aceita qualquer tamanho de vetor</td>
+</tr>
+<tr>
+<td>Sem índice HNSW</td>
+<td>Não há <code>idx_kb_embedding</code> nesta tabela (dados ainda não são buscados)</td>
+</tr>
+<tr>
+<td>Sequence <code>kb_id_seq</code> compartilhada</td>
+<td>O ID gerado aqui tambem consome da mesma sequence da <code>knowledge_base</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Nota:</strong> Pense no <code>knowledge_base_etl</code> como uma "fila de aprovação": novos chunks entram aqui, são validados pela curadoria e depois movidos (INSERT + DELETE) para a <code>knowledge_base</code>, momento em que o embedding com dimensão correta é gerado.</p>
+</blockquote>
+<h3 id="sessions"><code>sessions</code><a class="headerlink" href="#sessions" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo SQL</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>session_id</code></td>
+<td>text (PK)</td>
+<td>UUID anônimo gerado pelo front-end via <code>uuid.uuid4()</code>. Identifica a sessão do usuário.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>bigint (UNIQUE, IDENTITY)</td>
+<td>ID numérico auto-incremental interno. Gerado <code>BY DEFAULT AS IDENTITY</code>.</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamptz</td>
+<td>Momento de criação da sessão. DEFAULT <code>now()</code>.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Nota:</strong> A tabela <code>sessions</code> é a âncora de integridade referencial do banco. As tabelas <code>chat_logs</code>, <code>error_logs</code> e <code>user_reports</code> tem FK para <code>sessions.session_id</code> com <code>ON DELETE RESTRICT</code>, ou seja, uma sessão só pode ser deletada se não houver registros dependentes.</p>
+</blockquote>
+<h3 id="chat_logs"><code>chat_logs</code><a class="headerlink" href="#chat_logs" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo SQL</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chat_id</code></td>
+<td>bigint (PK, IDENTITY)</td>
+<td>ID auto-incremental gerado <code>BY DEFAULT AS IDENTITY</code>.</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>text (FK -&gt; sessions)</td>
+<td>Referencia a sessão. <code>ON DELETE RESTRICT</code>.</td>
+</tr>
+<tr>
+<td><code>prompt</code></td>
+<td>text</td>
+<td>Pergunta enviada pelo usuário.</td>
+</tr>
+<tr>
+<td><code>response</code></td>
+<td>text</td>
+<td>Resposta gerada pelo Vox AI.</td>
+</tr>
+<tr>
+<td><code>git_version</code></td>
+<td>text</td>
+<td>Versão do software no momento da conversa (para rastrear bugs em releases).</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamptz</td>
+<td>Data e hora da interação. DEFAULT <code>now()</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="chat_logs_kb-pivot-de-auditoria-rag"><code>chat_logs_kb</code> — Pivot de Auditoria RAG<a class="headerlink" href="#chat_logs_kb-pivot-de-auditoria-rag" title="Permanent link">&para;</a></h3>
+<p>Tabela fundamental para auditabilidade. Conecta cada resposta da IA (<code>chat_logs</code>) com os fragmentos exatos de conhecimento (<code>knowledge_base</code>) que foram usados para gerá-la. Permite rastrear a origem de possíveis alucinações e medir a utilidade de cada chunk.</p>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo SQL</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chat_log_kb_id</code></td>
+<td>bigint (PK, UNIQUE, IDENTITY)</td>
+<td>ID auto-incremental gerado <code>BY DEFAULT AS IDENTITY</code>.</td>
+</tr>
+<tr>
+<td><code>chat_id</code></td>
+<td>bigint (FK -&gt; chat_logs)</td>
+<td>Referencia ao log de chat. <code>ON UPDATE CASCADE</code>.</td>
+</tr>
+<tr>
+<td><code>kb_id</code></td>
+<td>text (FK -&gt; knowledge_base)</td>
+<td>Referencia ao chunk usado. <code>ON UPDATE CASCADE</code>.</td>
+</tr>
+<tr>
+<td><code>similarity</code></td>
+<td>double precision</td>
+<td>Score de similaridade cosseno (0 a 1). Pode ser NULL quando a Estratégia de Contexto Expandido e usada (busca direta por tópico, sem score de similaridade).</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamptz</td>
+<td>Data do registro. DEFAULT <code>now()</code>.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Nota:</strong> O INSERT nesta tabela aciona automaticamente o trigger <code>tg_update_kb_usage</code>, que chama <code>increment_kb_count()</code> e incrementa <code>kb_count</code> na <code>knowledge_base</code>. Isso cria um sistema automático de métricas de utilidade dos chunks sem nenhuma lógica extra no Python.</p>
+</blockquote>
+<h3 id="user_reports"><code>user_reports</code><a class="headerlink" href="#user_reports" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo SQL</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>bigint (PK, IDENTITY)</td>
+<td>ID auto-incremental gerado <code>ALWAYS AS IDENTITY</code>.</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>text (FK -&gt; sessions)</td>
+<td>Sessão que originou o report. <code>ON DELETE RESTRICT</code>.</td>
+</tr>
+<tr>
+<td><code>category_id</code></td>
+<td>bigint (FK -&gt; report_categories)</td>
+<td>Categoria da denuncia. <code>ON UPDATE CASCADE</code>.</td>
+</tr>
+<tr>
+<td><code>comment</code></td>
+<td>text</td>
+<td>Comentário textual do usuário descrevendo o problema.</td>
+</tr>
+<tr>
+<td><code>chat_history</code></td>
+<td>text</td>
+<td>Histórico completo da conversa no momento do report (JSON serializado como string).</td>
+</tr>
+<tr>
+<td><code>git_version</code></td>
+<td>text</td>
+<td>Versão do software para correlacionar com releases.</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamptz</td>
+<td>Data do report. DEFAULT <code>now()</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="report_categories"><code>report_categories</code><a class="headerlink" href="#report_categories" title="Permanent link">&para;</a></h3>
+<p>Tabela de referencia com as categorias disponíveis para classificar um report. Possui COMMENT no schema: <em>"Tags para o erro que o usuário deseja reportar."</em></p>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo SQL</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer (PK, SERIAL)</td>
+<td>ID auto-incremental via sequence <code>report_categories_id_seq</code>.</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td>text</td>
+<td>Nome da categoria exibido ao usuário (ex: "Alucinacao", "Conteúdo Ofensivo").</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>text</td>
+<td>Descrição detalhada do que se enquadra nessa categoria.</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamptz</td>
+<td>Data de criação. DEFAULT <code>now()</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="error_logs"><code>error_logs</code><a class="headerlink" href="#error_logs" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo SQL</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>bigint (PK, IDENTITY)</td>
+<td>ID auto-incremental gerado <code>ALWAYS AS IDENTITY</code>.</td>
+</tr>
+<tr>
+<td><code>error_id</code></td>
+<td>text</td>
+<td>Hash curto de 8 caracteres gerado por <code>uuid4()[:8]</code>. Exibido ao usuário para facilitar o reporte a equipe.</td>
+</tr>
+<tr>
+<td><code>error_message</code></td>
+<td>text</td>
+<td>Mensagem de erro completa capturada pelo bloco <code>except</code>.</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>text (FK -&gt; sessions)</td>
+<td>Sessão onde o erro ocorreu. <code>ON DELETE RESTRICT</code>.</td>
+</tr>
+<tr>
+<td><code>git_version</code></td>
+<td>text</td>
+<td>Versão do software onde o erro foi detectado.</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamptz</td>
+<td>Data e hora do erro. DEFAULT <code>now()</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="funcoes-postgresql">Funções PostgreSQL<a class="headerlink" href="#funcoes-postgresql" title="Permanent link">&para;</a></h2>
+<h3 id="match_knowledge_base-busca-vetorial-rpc"><code>match_knowledge_base()</code> — Busca Vetorial RPC<a class="headerlink" href="#match_knowledge_base-busca-vetorial-rpc" title="Permanent link">&para;</a></h3>
+<p>A função mais crítica do sistema. Executa a busca vetorial por similaridade de cosseno usando o operador <code>&lt;=&gt;</code> do pgvector. E exposta como RPC pelo Supabase e chamada pelo Python via <code>client.rpc()</code>.</p>
+<pre><code class="language-sql">CREATE OR REPLACE FUNCTION public.match_knowledge_base(
+    query_embedding  vector,           -- vetor de 1536 dimensões
+    match_threshold  double precision, -- similaridade mínima (ex: 0.5)
+    match_count      integer,          -- máximo de resultados (ex: 10)
+    filter_topic     text DEFAULT NULL -- filtro opcional por tópico
+) RETURNS TABLE (
+    id text, topico text, eixo_tematico text, descrição text, similarity double precision
+)
+
+-- Fórmula da similaridade coseno:
+-- similarity = 1 - (embedding &lt;=&gt; query_embedding)
+-- Onde &lt;=&gt; e o operador de distância coseno do pgvector.
+-- Quanto menor a distância, maior a similaridade.
+-- Resultados ordenados pela distância (ASC) = maior similaridade primeiro.
+</code></pre>
+<blockquote>
+<p><strong>Nota:</strong> O operador <code>&lt;=&gt;</code> calcula a distância coseno entre dois vetores. A formula <code>1 - distância</code> converte isso em um score de similaridade entre 0 e 1, onde 1 significa idêntico e 0 significa completamente diferente. O threshold de 0.5 descarta resultados com mais de 50% de diferença semântica.</p>
+</blockquote>
+<h3 id="increment_kb_count-trigger-function"><code>increment_kb_count()</code> — Trigger Function<a class="headerlink" href="#increment_kb_count-trigger-function" title="Permanent link">&para;</a></h3>
+<p>Função chamada automaticamente pelo trigger <code>tg_update_kb_usage</code> após cada INSERT na tabela <code>chat_logs_kb</code>. Incrementa o campo <code>kb_count</code> na <code>knowledge_base</code> para o <code>kb_id</code> recém-inserido.</p>
+<pre><code class="language-sql">CREATE OR REPLACE FUNCTION public.increment_kb_count()
+RETURNS trigger LANGUAGE plpgsql AS $$
+begin
+  UPDATE knowledge_base
+  set kb_count = kb_count + 1
+  where kb_id = new.kb_id;
+  return new;
+end
+$$;
+</code></pre>
+<h3 id="update_modificado_em-trigger-function"><code>update_modificado_em()</code> — Trigger Function<a class="headerlink" href="#update_modificado_em-trigger-function" title="Permanent link">&para;</a></h3>
+<p>Função chamada automaticamente pelos triggers <code>update_kb_modificado_em</code> e <code>update_kb_etl_modificado_em</code> antes de qualquer UPDATE nas tabelas <code>knowledge_base</code> e <code>knowledge_base_etl</code>. Garante que o campo <code>modificado_em</code> seja sempre atualizado para o timestamp atual.</p>
+<pre><code class="language-sql">CREATE OR REPLACE FUNCTION public.update_modificado_em()
+RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+    NEW.modificado_em = now();
+    RETURN NEW;
+END;
+$$;
+</code></pre>
+<blockquote>
+<p><strong>Nota:</strong> Este campo e utilizado pelo <code>dashboard.js</code> para calcular a "versão" da base de conhecimento. Formato: <code>v{ano}.{mes}.{dia}</code> baseado na data da última modificação.</p>
+</blockquote>
+<h2 id="triggers">Triggers<a class="headerlink" href="#triggers" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Nome do Trigger</th>
+<th>Tabela</th>
+<th>Evento</th>
+<th>Momento</th>
+<th>Função Chamada</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tg_update_kb_usage</code></td>
+<td>chat_logs_kb</td>
+<td>INSERT</td>
+<td>AFTER</td>
+<td><code>increment_kb_count()</code></td>
+<td>Incrementa <code>kb_count</code> no chunk da KB sempre que ele é registrado como utilizado em uma resposta.</td>
+</tr>
+<tr>
+<td><code>update_kb_modificado_em</code></td>
+<td>knowledge_base</td>
+<td>UPDATE</td>
+<td>BEFORE</td>
+<td><code>update_modificado_em()</code></td>
+<td>Atualiza o timestamp <code>modificado_em</code> automaticamente em qualquer UPDATE na KB.</td>
+</tr>
+<tr>
+<td><code>update_kb_etl_modificado_em</code></td>
+<td>knowledge_base_etl</td>
+<td>UPDATE</td>
+<td>BEFORE</td>
+<td><code>update_modificado_em()</code></td>
+<td>Mesma função, aplicada a tabela de staging ETL.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="indices">Índices<a class="headerlink" href="#indices" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Nome</th>
+<th>Tabela</th>
+<th>Tipo</th>
+<th>Coluna(s)</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>idx_kb_embedding</code></td>
+<td>knowledge_base</td>
+<td><strong>HNSW</strong></td>
+<td>embedding (vector_cosine_ops)</td>
+<td>Índice principal do RAG. Permite busca por vizinhos mais próximos (cosine) em milissegundos mesmo com milhares de chunks.</td>
+</tr>
+<tr>
+<td><code>idx_kb_topico</code></td>
+<td>knowledge_base</td>
+<td>B-tree</td>
+<td>tópico</td>
+<td>Acelera a estratégia de Contexto Expandido (busca <code>WHERE topico = ?</code>).</td>
+</tr>
+<tr>
+<td><code>idx_kb_eixo</code></td>
+<td>knowledge_base</td>
+<td>B-tree</td>
+<td>eixo_temático</td>
+<td>Acelera filtros por eixo temático.</td>
+</tr>
+<tr>
+<td><code>idx_chat_logs_session_id</code></td>
+<td>chat_logs</td>
+<td>B-tree</td>
+<td>session_id</td>
+<td>Acelera a recuperação do historico de uma sessão específica.</td>
+</tr>
+<tr>
+<td><code>idx_chat_logs_kb_log</code></td>
+<td>chat_logs_kb</td>
+<td>B-tree</td>
+<td>chat_log_kb_id</td>
+<td>Suporte a queries na tabela pivot de auditoria.</td>
+</tr>
+<tr>
+<td><code>idx_error_logs_session_id</code></td>
+<td>error_logs</td>
+<td>B-tree</td>
+<td>session_id</td>
+<td>Acelera a busca de erros por sessão.</td>
+</tr>
+<tr>
+<td><code>idx_user_reports_session_id</code></td>
+<td>user_reports</td>
+<td>B-tree</td>
+<td>session_id</td>
+<td>Acelera a busca de reports por sessão.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Nota:</strong> O índice HNSW (Hierarchical Navigable Small World) é um algoritmo de busca aproximada de vizinhos mais próximos. Ele constroi um grafo hierárquico de nos conectados e permite navegar para o vizinho mais próximo em tempo sub-linear. É a escolha padrão para produção com <code>pgvector</code>.</p>
+</blockquote>
+<h2 id="foreign-keys-e-integridade-referencial">Foreign Keys e Integridade Referencial<a class="headerlink" href="#foreign-keys-e-integridade-referencial" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>De</th>
+<th>Para</th>
+<th>ON UPDATE</th>
+<th>ON DELETE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chat_log_kb_chat_id_fkey</code></td>
+<td>chat_logs_kb.chat_id</td>
+<td>chat_logs.chat_id</td>
+<td>CASCADE</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>chat_log_kb_kb_id_fkey</code></td>
+<td>chat_logs_kb.kb_id</td>
+<td>knowledge_base.kb_id</td>
+<td>CASCADE</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>chat_logs_session_id_fkey</code></td>
+<td>chat_logs.session_id</td>
+<td>sessions.session_id</td>
+<td>—</td>
+<td>RESTRICT</td>
+</tr>
+<tr>
+<td><code>error_logs_session_id_fkey</code></td>
+<td>error_logs.session_id</td>
+<td>sessions.session_id</td>
+<td>—</td>
+<td>RESTRICT</td>
+</tr>
+<tr>
+<td><code>user_reports_session_id_fkey</code></td>
+<td>user_reports.session_id</td>
+<td>sessions.session_id</td>
+<td>—</td>
+<td>RESTRICT</td>
+</tr>
+<tr>
+<td><code>user_reports_category_id_fkey</code></td>
+<td>user_reports.category_id</td>
+<td>report_categories.id</td>
+<td>CASCADE</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Nota:</strong> O <code>ON DELETE RESTRICT</code> na sessão significa que não e possivel deletar uma sessão diretamente enquanto houver registros dependentes. Para deletar uma sessão, é necessário primeiro deletar todos os <code>chat_logs</code>, <code>error_logs</code> e <code>user_reports</code> associados a ela.</p>
+</blockquote>
+<h2 id="row-level-security-rls">Row Level Security (RLS)<a class="headerlink" href="#row-level-security-rls" title="Permanent link">&para;</a></h2>
+<p>RLS está habilitada em <strong>todas</strong> as tabelas do schema public. Por padrão, nenhum usuário pode ler ou escrever em nenhuma tabela sem uma policy explícita autorizando.</p>
+<table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>RLS</th>
+<th>Policy Ativa</th>
+<th>Detalhe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>knowledge_base</td>
+<td>Habilitada</td>
+<td>1 policy pública</td>
+<td><code>FOR SELECT TO anon USING (true)</code> — qualquer usuário anônimo pode <strong>ler</strong> a KB. Escrita requer <code>service_role</code>.</td>
+</tr>
+<tr>
+<td>chat_logs</td>
+<td>Habilitada</td>
+<td>Nenhuma</td>
+<td>Apenas <code>service_role</code> pode inserir (SDK Python do backend).</td>
+</tr>
+<tr>
+<td>chat_logs_kb</td>
+<td>Habilitada</td>
+<td>Nenhuma</td>
+<td>Apenas <code>service_role</code> pode inserir.</td>
+</tr>
+<tr>
+<td>sessions</td>
+<td>Habilitada</td>
+<td>Nenhuma</td>
+<td>Apenas <code>service_role</code> pode inserir.</td>
+</tr>
+<tr>
+<td>user_reports</td>
+<td>Habilitada</td>
+<td>Nenhuma</td>
+<td>Apenas <code>service_role</code> pode inserir.</td>
+</tr>
+<tr>
+<td>error_logs</td>
+<td>Habilitada</td>
+<td>Nenhuma</td>
+<td>Apenas <code>service_role</code> pode inserir.</td>
+</tr>
+<tr>
+<td>report_categories</td>
+<td>Habilitada</td>
+<td>Nenhuma</td>
+<td>Apenas <code>service_role</code> pode modificar.</td>
+</tr>
+<tr>
+<td>knowledge_base_etl</td>
+<td>Habilitada</td>
+<td>Nenhuma</td>
+<td>Uso interno pela equipe de curadoria.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>ATENÇÃO:</strong> A chave <code>anon</code> do Supabase é segura de expor no frontend (Dashboard) porque as policies RLS garantem que mesmo com ela em mãos, um atacante so consegue fazer <code>SELECT</code> na <code>knowledge_base</code>. Todas as operações de escrita exigem a chave <code>service_role</code>, que fica apenas no backend/CI.</p>
+</blockquote>
+<h2 id="migrations">Migrations<a class="headerlink" href="#migrations" title="Permanent link">&para;</a></h2>
+<h3 id="migration-1-20260410192141_remote_schemasql">Migration 1: <code>20260410192141_remote_schema.sql</code><a class="headerlink" href="#migration-1-20260410192141_remote_schemasql" title="Permanent link">&para;</a></h3>
+<p>Schema inicial completo do banco. Cria toda a estrutura descrita nesta seção: extensões, sequences, tabelas, funções, triggers, índices, foreign keys, grants de permissão e RLS policies. E o estado base do banco antes de qualquer alteração posterior.</p>
+<h3 id="migration-2-20260418194905_alter_vetor_tamanho_1536_knowledge_basesql">Migration 2: <code>20260418194905_alter_vetor_tamanho_1536_knowledge_base.sql</code><a class="headerlink" href="#migration-2-20260418194905_alter_vetor_tamanho_1536_knowledge_basesql" title="Permanent link">&para;</a></h3>
+<p>Necessária para mudar o modelo de embeddings de uma versão anterior (vetores de 768 dimensões) para o <code>gemini-embedding-001</code> (1536 dimensões). Como o PostgreSQL não permite alterar a dimensão de uma coluna <code>vector</code> diretamente com dados, a migration faz o processo em duas etapas:</p>
+<pre><code class="language-sql">-- Passo 1: Zerar todos os embeddings existentes
+UPDATE knowledge_base SET embedding = null WHERE embedding IS NOT NULL;
+
+-- Passo 2: Alterar o tipo da coluna para o novo tamanho
+ALTER TABLE public.knowledge_base
+  ALTER COLUMN embedding
+  SET DATA TYPE public.vector(1536)
+  USING embedding::public.vector(1536);
+</code></pre>
+<blockquote>
+<p><strong>ATENÇÃO:</strong> Após esta migration, todos os registros tiveram seus embeddings zerados. Foi necessário rodar <code>scripts/gerar_embedding.py</code> para reindexar toda a base de conhecimento com os novos vetores de 1536 dimensões.</p>
+</blockquote>
+<h2 id="sequences-auto-increment">Sequences (Auto-increment)<a class="headerlink" href="#sequences-auto-increment" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Sequence</th>
+<th>Tipo</th>
+<th>Usada por</th>
+<th>Comportamento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kb_id_seq</code></td>
+<td>SEQUENCE (bigint)</td>
+<td><code>knowledge_base.kb_id</code> e <code>knowledge_base_etl.kb_id</code></td>
+<td>Compartilhada entre as duas tabelas. Gera o numero do ID legivel (ex: <code>vox-kb-0001</code>). Comeca em 1, incrementa 1.</td>
+</tr>
+<tr>
+<td><code>chat_log_kb_chat_log_kb_id_seq</code></td>
+<td>IDENTITY (bigint)</td>
+<td><code>chat_logs_kb.chat_log_kb_id</code></td>
+<td>Gerenciada automaticamente pelo <code>GENERATED BY DEFAULT AS IDENTITY</code>.</td>
+</tr>
+<tr>
+<td><code>chat_logs_id_seq</code></td>
+<td>IDENTITY (bigint)</td>
+<td><code>chat_logs.chat_id</code></td>
+<td>Idem.</td>
+</tr>
+<tr>
+<td><code>error_logs_id_seq</code></td>
+<td>IDENTITY (bigint)</td>
+<td><code>error_logs.id</code></td>
+<td><code>GENERATED ALWAYS AS IDENTITY</code> — não aceita valores manuais.</td>
+</tr>
+<tr>
+<td><code>report_categories_id_seq</code></td>
+<td>SEQUENCE (integer)</td>
+<td><code>report_categories.id</code></td>
+<td>Sequence clássica linkada via <code>OWNED BY</code>.</td>
+</tr>
+<tr>
+<td><code>sessions_id_seq</code></td>
+<td>IDENTITY (bigint)</td>
+<td><code>sessions.id</code></td>
+<td><code>GENERATED BY DEFAULT AS IDENTITY</code>.</td>
+</tr>
+<tr>
+<td><code>user_reports_id_seq</code></td>
+<td>IDENTITY (bigint)</td>
+<td><code>user_reports.id</code></td>
+<td><code>GENERATED ALWAYS AS IDENTITY</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © Vox AI: conversas que importam | Licença GNU GPLv3
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/emn-f/vox-ai" target="_blank" rel="noopener" title="Repositório Principal" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.instagram.com/projetovoxai/" target="_blank" rel="noopener" title="www.instagram.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M224.3 141a115 115 0 1 0-.6 230 115 115 0 1 0 .6-230m-.6 40.4a74.6 74.6 0 1 1 .6 149.2 74.6 74.6 0 1 1-.6-149.2m93.4-45.1a26.8 26.8 0 1 1 53.6 0 26.8 26.8 0 1 1-53.6 0m129.7 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8M399 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://linktr.ee/vox_ai" target="_blank" rel="noopener" title="Linktree do Projeto" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.59 13.41c.41.39.41 1.03 0 1.42-.39.39-1.03.39-1.42 0a5.003 5.003 0 0 1 0-7.07l3.54-3.54a5.003 5.003 0 0 1 7.07 0 5.003 5.003 0 0 1 0 7.07l-1.49 1.49c.01-.82-.12-1.64-.4-2.42l.47-.48a2.98 2.98 0 0 0 0-4.24 2.98 2.98 0 0 0-4.24 0l-3.53 3.53a2.98 2.98 0 0 0 0 4.24m2.82-4.24c.39-.39 1.03-.39 1.42 0a5.003 5.003 0 0 1 0 7.07l-3.54 3.54a5.003 5.003 0 0 1-7.07 0 5.003 5.003 0 0 1 0-7.07l1.49-1.49c-.01.82.12 1.64.4 2.43l-.47.47a2.98 2.98 0 0 0 0 4.24 2.98 2.98 0 0 0 4.24 0l3.53-3.53a2.98 2.98 0 0 0 0-4.24.973.973 0 0 1 0-1.42"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://www.linkedin.com/company/assistentevox/" target="_blank" rel="noopener" title="Vox no LinkedIn" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://medium.com/@emnferreira/do-mvp-ao-rag-como-o-vox-ai-evoluiu-de-planilhas-para-uma-arquitetura-escalável-com-supabase-4c51b951ed56" target="_blank" rel="noopener" title="Artigos mais recente no Medium" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M369.4 32c43.4 0 78.6 35.2 78.6 78.6v83.8c-1.9-.1-3.8-.2-5.7-.2h-.4c-10 0-22.3 2.4-31.1 6.8-10 4.6-18.7 11.5-26 20.6-11.8 14.6-18.9 34.3-20.6 56.4-.1.7-.1 1.3-.2 2s-.1 1.2-.1 1.9c-.1 1.2-.1 2.4-.1 3.6 0 1.9-.1 3.8 0 5.8 1.2 50.1 28.2 90.2 76.3 90.2 2.7 0 5.3-.1 7.9-.4v20.4c0 43.4-35.2 78.6-78.6 78.6L78.6 480C35.2 480 0 444.8 0 401.4V110.6C0 67.2 35.2 32 78.6 32zM82.3 138.9l.3.1c13.2 3 19.8 7.4 19.8 23.4v187.2c0 16-6.7 20.4-19.9 23.4l-.3.1v2.8H135v-2.8l-.3-.1c-13.2-3-19.9-7.4-19.9-23.4V173.3l86.1 202.5h4.9l88.6-208.2v186.6c-1.1 12.6-7.8 16.5-19.7 19.2l-.3.1v2.7h91.9v-2.7l-.3-.1c-11.9-2.7-18.7-6.6-19.9-19.2l-.1-191.8h.1c0-16 6.7-20.4 19.9-23.4l.3-.1v-2.7h-72.2l-67 157.4-67-157.4H82.3zM448 340.3c-25.1-7.4-43-35.1-41.2-67.8h41.1v67.8zm-6.4-135.6c2.3 0 4.4.3 6.4.9V263h-40.2c1.5-33.6 13.6-57.9 33.8-58.3"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:assistentedeapoiolgbtvox@gmail.com" target="_blank" rel="noopener" title="Contato por E-mail" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://wa.me/5571992348839" target="_blank" rel="noopener" title="Atendimento via WhatsApp" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157m-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1s56.2 81.2 56.1 130.5c0 101.8-84.9 184.6-186.6 184.6m101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8s-14.3 18-17.6 21.8c-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7s-12.5-30.1-17.1-41.2c-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2s-9.7 1.4-14.8 6.9c-5.1 5.6-19.4 19-19.4 46.3s19.9 53.7 22.6 57.4c2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4s4.6-24.1 3.2-26.4c-1.3-2.5-5-3.9-10.5-6.6"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
