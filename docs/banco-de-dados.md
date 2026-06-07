@@ -1,16 +1,18 @@
 # Banco de Dados — Schema Completo (Supabase / PostgreSQL)
 
+> Última atualização em 07/06/2026
+
 ## Visão Geral
 
 O Vox AI usa o Supabase como backend de dados completo. O banco é PostgreSQL 17 com:
 
-- **7 tabelas**
-- **3 funções customizadas** (incluindo 2 usadas como triggers)
+- **8 tabelas**
+- **4 funções customizadas** (incluindo 2 usadas como triggers)
 - **3 triggers ativas**
-- **7 índices de performance** (incluindo 1 HNSW para busca vetorial)
+- **8 índices de performance** (incluindo 1 HNSW para busca vetorial e 1 B-tree para chaves de configuração)
 - **6 constraints de chave estrangeira**
 - **RLS (Row Level Security) habilitada em todas as tabelas**
-- **5 extensões ativas**
+- **6 extensões ativas**
 
 Esta seção foi gerada diretamente a partir do dump do schema SQL do banco de produção.
 
@@ -19,6 +21,7 @@ Esta seção foi gerada diretamente a partir do dump do schema SQL do banco de p
 | Extensão | Schema | Finalidade |
 |---|---|---|
 | **vector** | public | Adiciona o tipo `vector`, o operador de distância coseno (`<=>`), funções de similaridade e suporte a índices HNSW. É o núcleo do sistema RAG. |
+| **pg_cron** | pg_catalog | Agenda jobs SQL periódicos, como a limpeza de logs antigos sob a LGPD. |
 | **pg_graphql** | graphql | Expoe o schema do banco como uma API GraphQL automaticamente. Usado pelo Supabase Studio. |
 | **pg_stat_statements** | extensions | Coleta estatísticas de execução de queries SQL (tempo, chamadas, rows). Útil para profiling e otimização. |
 | **pgcrypto** | extensions | Funções criptográficas (hash, UUID, criptografia simetrica). Usada internamente pelo Supabase Auth. |
@@ -43,6 +46,8 @@ A tabela mais importante do sistema. Cada linha representa um "chunk" de conheci
 | `created_at` | timestamptz | NULL | `now()` | Data de criação do registro. |
 | `kb_count` | numeric | NULL | — | Contador de quantas vezes o chunk foi recuperado. Incrementado automaticamente pela trigger `tg_update_kb_usage`. |
 | `embedding` | vector(1536) | NULL | — | Vetor semântico de 1536 dimensões. Indexado com HNSW (`idx_kb_embedding`). Gerado pelo modelo `gemini-embedding-001`. |
+| `ativo` | boolean | NULL | `true` | Se o chunk está ativo e disponível para busca pelo RAG. |
+| `validated` | smallint | NOT NULL | `0` | Status de validação do chunk pela equipe de curadoria. |
 | `modificado_em` | timestamptz | NULL | `now()` | Data da última modificação. Atualizado automaticamente pela trigger `update_kb_modificado_em`. |
 
 > **Nota:** O `kb_id` e gerado automaticamente pelo banco usando a expressão `DEFAULT`. A sequence `kb_id_seq` é compartilhada entre `knowledge_base` e `knowledge_base_etl`, o que garante que os IDs são únicos globalmente entre as duas tabelas.
@@ -128,11 +133,18 @@ Tabela de referencia com as categorias disponíveis para classificar um report. 
 | `git_version` | text | Versão do software onde o erro foi detectado. |
 | `created_at` | timestamptz | Data e hora do erro. DEFAULT `now()`. |
 
+### `system_settings`
+
+| Coluna | Tipo SQL | Descrição |
+|---|---|---|
+| `key` | text (PK) | Chave única para a configuração do sistema (ex: `'environment'`). |
+| `value` | text | Valor da configuração do sistema (ex: `'development'`). |
+
 ## Funções PostgreSQL
 
 ### `match_knowledge_base()` — Busca Vetorial RPC
 
-A função mais crítica do sistema. Executa a busca vetorial por similaridade de cosseno usando o operador `<=>` do pgvector. E exposta como RPC pelo Supabase e chamada pelo Python via `client.rpc()`.
+A função mais crítica do sistema. Executa a busca vetorial por similaridade de cosseno usando o operador `<=>` do pgvector. É exposta como RPC pelo Supabase e chamada pelo Python via `client.rpc()`. Ela retorna apenas registros ativos (`ativo = true`).
 
 ```sql
 CREATE OR REPLACE FUNCTION public.match_knowledge_base(
@@ -141,17 +153,34 @@ CREATE OR REPLACE FUNCTION public.match_knowledge_base(
     match_count      integer,          -- máximo de resultados (ex: 10)
     filter_topic     text DEFAULT NULL -- filtro opcional por tópico
 ) RETURNS TABLE (
-    id text, topico text, eixo_tematico text, descrição text, similarity double precision
+    id text, topico text, eixo_tematico text, descricao text, similarity double precision
 )
-
--- Fórmula da similaridade coseno:
--- similarity = 1 - (embedding <=> query_embedding)
--- Onde <=> e o operador de distância coseno do pgvector.
--- Quanto menor a distância, maior a similaridade.
--- Resultados ordenados pela distância (ASC) = maior similaridade primeiro.
 ```
 
+> Fórmula da similaridade coseno:
+
+> `similarity = 1 - (embedding <=> query_embedding)` - Onde `<=>` é o operador de distância coseno do pgvector. Quanto menor a distância, maior a similaridade. Resultados ordenados pela distância (ASC) = maior similaridade primeiro.
+
 > **Nota:** O operador `<=>` calcula a distância coseno entre dois vetores. A formula `1 - distância` converte isso em um score de similaridade entre 0 e 1, onde 1 significa idêntico e 0 significa completamente diferente. O threshold de 0.5 descarta resultados com mais de 50% de diferença semântica.
+
+### `is_dev_environment()` — Verificação de Ambiente
+
+Retorna se o ambiente do banco está configurado como desenvolvimento, checando a tabela `system_settings`.
+
+```sql
+CREATE OR REPLACE FUNCTION public.is_dev_environment()
+ RETURNS boolean
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+AS $function$
+  SELECT COALESCE(
+    (SELECT value = 'development'
+     FROM public.system_settings
+     WHERE key = 'environment'),
+    false
+  );
+$function$;
+```
 
 ### `increment_kb_count()` — Trigger Function
 
@@ -227,6 +256,7 @@ RLS está habilitada em **todas** as tabelas do schema public. Por padrão, nenh
 | Tabela | RLS | Policy Ativa | Detalhe |
 |---|---|---|---|
 | knowledge_base | Habilitada | 1 policy pública | `FOR SELECT TO anon USING (true)` — qualquer usuário anônimo pode **ler** a KB. Escrita requer `service_role`. |
+| system_settings | Habilitada | Políticas customizadas | Leitura permitida para `anon` e `authenticated` via RLS/Grants. Escrita requer `service_role`. |
 | chat_logs | Habilitada | Nenhuma | Apenas `service_role` pode inserir (SDK Python do backend). |
 | chat_logs_kb | Habilitada | Nenhuma | Apenas `service_role` pode inserir. |
 | sessions | Habilitada | Nenhuma | Apenas `service_role` pode inserir. |
@@ -236,6 +266,32 @@ RLS está habilitada em **todas** as tabelas do schema public. Por padrão, nenh
 | knowledge_base_etl | Habilitada | Nenhuma | Uso interno pela equipe de curadoria. |
 
 > **ATENÇÃO:** A chave `anon` do Supabase é segura de expor no frontend (Dashboard) porque as policies RLS garantem que mesmo com ela em mãos, um atacante so consegue fazer `SELECT` na `knowledge_base`. Todas as operações de escrita exigem a chave `service_role`, que fica apenas no backend/CI.
+
+## Jobs Agendados (pg_cron - LGPD)
+
+### `descarte-logs-12-meses`
+
+Job agendado para executar todo domingo às 00:00 UTC que deleta registros de logs e sessões com mais de 12 meses, garantindo a conformidade do projeto com a LGPD e evitando o acúmulo desnecessário de dados:
+
+```sql
+-- 1. Remover referências na tabela pivot de base de conhecimento (chat_logs_kb)
+delete from public.chat_logs_kb
+where chat_id in (
+  select chat_id from public.chat_logs where created_at < now() - interval '12 months'
+);
+
+-- 2. Remover logs de chat
+delete from public.chat_logs where created_at < now() - interval '12 months';
+
+-- 3. Remover logs de erro
+delete from public.error_logs where created_at < now() - interval '12 months';
+
+-- 4. Remover denúncias/relatórios de usuários
+delete from public.user_reports where created_at < now() - interval '12 months';
+
+-- 5. Remover sessões
+delete from public.sessions where created_at < now() - interval '12 months';
+```
 
 ## Migrations
 
@@ -259,6 +315,14 @@ ALTER TABLE public.knowledge_base
 ```
 
 > **ATENÇÃO:** Após esta migration, todos os registros tiveram seus embeddings zerados. Foi necessário rodar `scripts/gerar_embedding.py` para reindexar toda a base de conhecimento com os novos vetores de 1536 dimensões.
+
+### Migration 3: `20260607015204_feat_precisao_kb.sql`
+
+Cria a tabela `public.system_settings` para configurações globais do banco e adiciona as colunas `ativo` (boolean, default true) e `validated` (smallint, default 0) à tabela `knowledge_base` para controle de status dos chunks. Também cria a função auxiliar `public.is_dev_environment()`.
+
+### Migration 4: `20260607134737_refactor_matchkb_considera_status.sql`
+
+Refatora a função RPC `match_knowledge_base()` para retornar a coluna `descricao` (corrigindo nomes de colunas) e aplicar o filtro `knowledge_base.ativo IS true`, garantindo que chunks inativados pela equipe de curadoria sejam excluídos dos resultados do RAG.
 
 ## Sequences (Auto-increment)
 

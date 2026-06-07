@@ -1,5 +1,7 @@
 # Actions do Projeto
 
+> Última atualização em 07/06/2026
+
 ## Mapa Geral e Dependências
 
 ```
@@ -56,108 +58,120 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: "🐍 Setup Python 3.13"
-        uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
           python-version: "3.13"
-
-      - name: "📦 Instalar uv"
-        run: pip install uv
-
-      - name: "📥 Instalar dependências"
-        run: uv pip install -r requirements.txt --system
-
-      - name: "🧪 Executar pytest"
-        run: pytest tests/ -v
-        env:
-          GEMINI_API_KEY:       ${{ secrets.GEMINI_API_KEY }}
-          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY:    ${{ secrets.SUPABASE_ANON_KEY }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+      - name: Install Dependencies
+        run: uv sync
+      - name: Run Tests
+        run: uv run pytest
 ```
-
-> **Por que `--system` no uv?** O ambiente do GitHub Actions não tem um venv ativo. `--system` instrui o `uv` a instalar no Python do sistema em vez de tentar criar/ativar um venv.
 
 ### Job 2: `release_prod`
 
 ```yaml
   release_prod:
-    needs: test          # Só executa se test passou
+    needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # CRÍTICO: busca TODO o histórico de tags
+          fetch-depth: 0
+          token: ${{ secrets.TOKEN_DEPLOY_VOX }}
 
-      - name: "🔢 Calcular próxima versão"
-        id: version
+      - name: Configurar Git User
         run: |
-          LAST=$(git tag --list 'v*' --sort=-version:refname | head -n 1)
-          # Fallback se não houver nenhuma tag ainda
-          LAST=${LAST:-v0.0.0}
-          IFS='.' read -r MAJOR MINOR PATCH <<< "${LAST#v}"
-          echo "new_version=v${MAJOR}.${MINOR}.$((PATCH+1))" >> $GITHUB_OUTPUT
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: "📝 Gerar CHANGELOG com git-cliff"
+      - name: Calcular Próxima Versão Prod
+        id: get_tag
+        run: |
+          LAST_TAG=$(git tag --list "v*" --sort=-v:refname | head -n 1)
+          if [ -z "$LAST_TAG" ]; then
+            LAST_TAG="v0.0.0"
+          fi
+
+          VERSION=${LAST_TAG#v}
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          PATCH=$((PATCH + 1))
+          NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+
+          echo "Nova versão Prod: $NEW_TAG"
+          echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+
+      - name: Gerar Changelog (Git Cliff)
         uses: orhun/git-cliff-action@v4
         with:
           config: cliff.toml
-          args: --verbose --tag ${{ steps.version.outputs.new_version }}
-        env:
-          OUTPUT: CHANGELOG.md
-          GITHUB_REPO: ${{ github.repository }}
+          args: --unreleased --tag ${{ steps.get_tag.outputs.new_tag }} --prepend CHANGELOG.md
 
-      - name: "💾 Commit CHANGELOG e criar tag"
+      - name: Commitar, Taggear e Push
         run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          NEW_TAG="${{ steps.get_tag.outputs.new_tag }}"
           git add CHANGELOG.md
-          git commit -m "chore(release): ${{ steps.version.outputs.new_version }} [skip ci]"
-          git tag ${{ steps.version.outputs.new_version }}
-          git push origin main --follow-tags
+          if git diff --staged --quiet; then
+            echo "🚫 Changelog não mudou."
+          else
+            git commit -m "chore(release): changelog atualizado para versão ${NEW_TAG} [skip ci]"
+          fi
+          git tag $NEW_TAG
+          git remote set-url origin https://emn-f:${{ secrets.TOKEN_DEPLOY_VOX }}@github.com/${{ github.repository }}.git
+          git push origin main --tags
 ```
 
-> **`fetch-depth: 0`:** Sem isso, o `actions/checkout` faz um shallow clone (apenas o commit mais recente). O `git-cliff` e o cálculo da versão precisam de **todo o histórico de tags** para funcionar corretamente.
+> **`fetch-depth: 0`:** Sem isso, o `actions/checkout` faz um shallow clone (apenas o commit mais recente). O cálculo da tag e o `git-cliff` precisam de **todo o histórico de tags** para funcionar corretamente.
 
 
 ## `security_review.yml` — Code Review com IA
 
 **Arquivo:** `.github/workflows/security_review.yml`
-**Trigger:** `pull_request` apontando para `develop` ou `main`
+**Trigger:** `pull_request` apontando para `develop` ou `main` excluindo arquivos markdown.
 
 ```yaml
 on:
   pull_request:
-    branches: [develop, main]
+    branches: [ "main", "develop" ]
+    paths-ignore:
+      - '**.md'
+      - 'CHANGELOG.md'
 ```
 
-**Diferencial técnico:** Este workflow usa um `requirements.txt` **isolado** (`gatekeep/requirements-gatekeep.txt`) para instalar apenas as dependências necessárias para o script de segurança, sem instalar as dependências pesadas da aplicação principal (Streamlit, etc.).
+**Diferencial técnico:** Este workflow usa um `requirements.txt` **isolado** (`gatekeep/requirements-gatekeep.txt`) para instalar apenas as dependências necessárias para o script de segurança via `setup-uv`, sem instalar as dependências pesadas da aplicação principal.
 
 ```yaml
 jobs:
-  security-check:
+  review:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          # fetch-depth: 0 necessário para que o git diff
-          # contra GITHUB_BASE_REF funcione corretamente
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
           python-version: "3.13"
 
-      - name: "📦 Instalar deps do gatekeep"
-        run: pip install -r gatekeep/requirements-gatekeep.txt
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
 
-      - name: "🔒 Executar security_check"
-        run: python gatekeep/security_check.py --mode pre-push
+      - name: Install Dependencies
+        run: |
+          uv pip install -r gatekeep/requirements-gatekeep.txt --system
+
+      - name: Run Security & AI Review
         env:
-          GEMINI_API_KEY:  ${{ secrets.GEMINI_API_KEY }}
-          GITHUB_ACTIONS:  "true"
-          # GITHUB_BASE_REF é injetado automaticamente pelo GitHub
-          # em eventos de pull_request (ex: "develop" ou "main")
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY_PROD: ${{ secrets.SUPABASE_KEY_PROD }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python gatekeep/security_check.py --mode pre-push
 ```
 
 **Comportamento em fork PRs:** O GitHub não injeta secrets em PRs de forks por segurança. Nesses casos, `GEMINI_API_KEY` será vazio e o script entra em modo `fail-open`, permitindo a PR sem revisão da IA.

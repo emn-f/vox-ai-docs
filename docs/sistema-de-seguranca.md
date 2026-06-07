@@ -1,4 +1,7 @@
 # Sistema de Segurança e Code Review (Gatekeep)
+
+> Última atualização em 07/06/2026
+
 ## Visão Geral
 
 O diretório `gatekeep/` contém um sistema de seguranca em duas camadas: validação local (Git Hooks) e validação remota (GitHub Actions).

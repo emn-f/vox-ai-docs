@@ -1,5 +1,7 @@
 # Stack Tecnológica e Ferramentas
 
+> Última atualização em 07/06/2026
+
 ## Core da Aplicação
 
 | Ferramenta | Versão | Contexto no Vox AI | Docs Oficiais |

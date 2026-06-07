@@ -1,5 +1,7 @@
 # Módulos do Código — Referência Detalhada
 
+> Última atualização em 07/06/2026
+
 ## `vox_ai.py` — Ponto de Entrada Principal
 
 Arquivo principal da aplicação Streamlit. Orquestra todos os outros modulos. É o único arquivo executado diretamente pelo Streamlit (configurado como `app_file` no `pyproject.toml`).

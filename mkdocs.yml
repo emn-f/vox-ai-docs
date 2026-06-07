@@ -29,6 +29,7 @@ markdown_extensions:
   - toc:
       toc_depth: 5
       permalink: true
+  - sane_lists
 
 copyright: "© Vox AI: conversas que importam | Licença GNU GPLv3"
 
@@ -62,8 +63,8 @@ extra:
       name: Atendimento via WhatsApp
 
 nav:
-  - 1. Como Rodar Localmente: como-rodar-localmente.md
-  - 2. Visão Geral: index.md
+  - 1. Visão Geral: index.md
+  - 2. Como Rodar Localmente: como-rodar-localmente.md
   - 3. Convenções do Projeto: convencoes-do-projeto.md
   - 4. Estrutura de Pastas e Arquivos: estrutura-do-projeto.md
   - 5. Stack Tecnológica e Ferramentas: stack.md

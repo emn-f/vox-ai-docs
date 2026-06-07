@@ -1,5 +1,7 @@
 # Arquitetura do Sistema
 
+> Última atualização em 07/06/2026
+
 ## Visão Geral
 
 O Vox AI e uma aplicação monolítica em Python construída sobre Streamlit. Não há backend separado: o Streamlit gerencia o estado da sessão, a UI e orquestra as chamadas aos serviços externos (Gemini API e Supabase). Toda a lógica de negócio fica nos modulos da pasta `src/`.
@@ -41,7 +43,7 @@ A função `get_secret()` em `src/config.py` implementa sistema de fallback: pri
 ```toml
 # .streamlit/secrets.toml (NUNCA commitar este arquivo!)
 
-GEMINI_API_KEY = "AIza..."
+GEMINI_API_KEY = "AI..."
 
 [supabase]
 url = "https://xxxxx.supabase.co"

@@ -1,5 +1,7 @@
 # **Vox AI — Documentação Técnica**
 
+> Última atualização por Emanuel Ferreira em 07/06/2026
+
 > Repositório principal do Vox AI: [https://github.com/emn-f/vox-ai](https://github.com/emn-f/vox-ai/tree/develop)
 
 
@@ -32,11 +34,7 @@ O projeto nasceu da iniciativa de Emanuel Ferreira (Graduando em Engenharia de S
 ### Equipe
 
 - **Tech Lead:** [Emanuel Ferreira](http://linkedin.com/in/emanuelferreira)
-- **Desenvolvedores:** [@emn-f](https://github.com/emn-f) e [@rodrigosantos-eng](https://github.com/rodrigosantos-eng)
+- **Desenvolvedores:** [@emn-f](https://github.com/emn-f), [@rodrigosantos-eng](https://github.com/rodrigosantos-eng) e [@cfmiila](https://github.com/cfmiila), 
 - **Outros colaboradores:** Alicia Batista, Brenda Pires, Fernanda Souza, Kauã Araújo, Lucca Pertigas, Márcio Ventura
 - **Parceira Institucional:** [Casa de Cultura Marielle Franco](https://linktr.ee/casamariellefrancobr) (Salvador - BA)
-
-
-> Última atualização por Emanuel Ferreira em 20/04/2026
-
 ---

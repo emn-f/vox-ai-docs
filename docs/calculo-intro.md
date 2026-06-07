@@ -1,5 +1,7 @@
 # Cálculo Vetorial: Similaridade de Cosseno em Profundidade
 
+> Última atualização em 07/06/2026
+
 ## Da Linguagem Natural ao Espaço Vetorial
 
 O modelo `gemini-embedding-001` projeta qualquer texto em um espaço de **R^1536** (1536 dimensões reais). Cada dimensão captura um aspecto semântico latente aprendido durante o treinamento — conceitos, intenções, relações entre entidades.
@@ -60,35 +62,35 @@ Portanto:
 A função SQL `match_knowledge_base` no Supabase converte isso de volta para similaridade:
 
 ```sql
-CREATE OR REPLACE FUNCTION match_knowledge_base(
-    query_embedding vector(1536),
-    match_threshold float,
-    match_count int,
-    filter_topic text DEFAULT NULL
+CREATE OR REPLACE FUNCTION public.match_knowledge_base(
+    query_embedding public.vector,
+    match_threshold double precision,
+    match_count integer,
+    filter_topic text DEFAULT NULL::text
 )
-RETURNS TABLE (
-    id bigint,
-    content text,
-    topic text,
-    similarity float
+RETURNS TABLE(
+    id text,
+    topico text,
+    eixo_tematico text,
+    descricao text,
+    similarity double precision
 )
-LANGUAGE sql STABLE
-AS $$
-    SELECT
-        id,
-        content,
-        topic,
-        -- Converte distância de cosseno em score de similaridade [0,1]
-        1 - (knowledge_base.embedding <=> query_embedding) AS similarity
-    FROM knowledge_base
-    WHERE
-        -- Aplica filtro de threshold ANTES de retornar (eficiente com índice HNSW)
-        1 - (knowledge_base.embedding <=> query_embedding) > match_threshold
-        -- Filtro opcional por tópico
-        AND (filter_topic IS NULL OR topic = filter_topic)
-    ORDER BY knowledge_base.embedding <=> query_embedding ASC
-    LIMIT match_count;
-$$;
+LANGUAGE plpgsql
+AS $function$BEGIN
+    return query
+    select
+      knowledge_base.kb_id,
+      knowledge_base.topico,
+      knowledge_base.eixo_tematico,
+      knowledge_base.descricao,
+      1 - (knowledge_base.embedding <=> query_embedding) as similarity
+    from knowledge_base
+    where 1 - (knowledge_base.embedding <=> query_embedding) > match_threshold
+    and (filter_topic is null or knowledge_base.topico = filter_topic)
+    and knowledge_base.ativo is true
+    order by knowledge_base.embedding <=> query_embedding
+    limit match_count;
+  END;$function$;
 ```
 
 

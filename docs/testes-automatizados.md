@@ -1,5 +1,7 @@
 # Testes Automatizados
 
+> Última atualização em 07/06/2026
+
 ##  `conftest.py` — Fixtures Globais (`autouse=True`)
 
 | Fixture | O que faz |

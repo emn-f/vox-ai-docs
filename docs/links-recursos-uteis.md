@@ -1,5 +1,7 @@
 # Links e Recursos Úteis
 
+> Última atualização em 07/06/2026
+
 ## Projeto
 
 | Recurso | URL |

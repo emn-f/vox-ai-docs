@@ -5,6 +5,8 @@ search:
 
 # Estrutura de Pastas e Arquivos
 
+> Última atualização em 07/06/2026
+
 ```
 vox-ai/
 ├── .github/
@@ -30,9 +32,13 @@ vox-ai/
 │       └── TERMS_OF_USE.md
 |
 ├── gatekeep/               # Sistema de segurança e validação
-│   ├── security_check.py   # Revisão de código com IA + scan de segredos
-│   ├── validate_commit_msg.py  # Hook de validação de Conventional Commits
-│   ├── install_hooks.py    # Instala os Git Hooks localmente
+│   ├── security_check.py   # Orquestrador local do Gatekeeper (pre-commit/pre-push)
+│   ├── validate_commit_msg.py # Validador de Conventional Commits
+│   ├── colors.py           # Utilitários de colorização de logs
+│   ├── config_loader.py    # Leitor do secrets.toml usando tomllib
+│   ├── db_check.py         # Validador de migrations e conexões Supabase
+│   ├── secrets_check.py    # Scanner de chaves de API e tokens locais
+│   ├── ai_review.py        # Módulo de code review automático via Gemini API
 │   └── requirements-gatekeep.txt
 |
 ├── pages/
@@ -41,17 +47,22 @@ vox-ai/
 |
 ├── scripts/
 │   ├── gerar_embedding.py  # CLI para reindexar a base de conhecimento
-│   ├── utilitário.py       # Inserção manual na KB
-│   └── supabase_migration_auto.bat  # Automação de migrations (Windows)
+│   ├── install_hooks.py    # Instala os Git Hooks localmente (.git/hooks)
+│   └── old/                # Scripts utilitários legados
 |
 ├── src/                    # Código-fonte principal
 │   ├── app/
 │   │   └── ui.py           # Componentes Streamlit (sidebar, dialog, CSS)
 │   ├── core/
-│   │   ├── database.py     # Conexão e operações com Supabase
-│   │   ├── genai.py        # Integração com Google Gemini (LLM + embeddings)
-│   │   ├── semantica.py    # Orquestração do pipeline RAG
-│   │   └── chat.py         # Processamento de prompt + streaming
+│   │   ├── db/             # Camada modularizada de acesso ao Supabase
+│   │   │   ├── client.py     # Inicializador singleton do cliente Supabase
+│   │   │   ├── sessions.py   # Registro e limpeza de sessões
+│   │   │   ├── logs.py       # Registro de chats e logs de erros
+│   │   │   ├── reports.py    # Registro de denúncias de bugs
+│   │   │   └── retrieval.py  # Busca vetorial pgvector e RAG inteligente
+│   │   ├── database.py     # Facade (Fachada) de compatibilidade retroativa
+│   │   ├── genai.py        # Integração com Google Gemini (LLM + transcrição)
+│   │   └── semantica.py    # Orquestração do pipeline RAG (Gemini Embedding)
 │   ├── config.py           # Configurações globais, constantes, get_secret()
 │   ├── utils.py            # Utilitários: TTS, versão git, limpeza de texto
 │   └── external_links.py   # Centralização de todas as URLs externas
@@ -67,11 +78,14 @@ vox-ai/
 │       └── 20260418194905_alter_vetor_1536.sql # Resize do vetor para 1536d
 |
 ├── tests/
-│   ├── conftest.py                    # Fixtures globais (mocks)
-│   ├── test_database_functions.py     # Testes unitários do database.py
-│   ├── test_gemini_integration.py     # Teste de integração real com Gemini
-│   ├── test_supabase_connection.py    # Teste de conexão real com Supabase
-│   └── test_security_check.py         # Testes do sistema de gatekeep
+│   ├── conftest.py                    # Fixtures globais e mocks do Pytest
+│   ├── unit/                          # Testes unitários (rápidos com mocks)
+│   │   ├── test_database_functions.py
+│   │   ├── test_genai_error_handling.py
+│   │   └── test_security_check.py
+│   └── integration/                   # Testes de integração (reais com rede)
+│       ├── test_gemini_integration.py
+│       └── test_supabase_connection.py
 │
 ├── .python-version         # Versão do Python fixada (3.13)
 ├── CHANGELOG.md            # Histórico de versões gerado automaticamente

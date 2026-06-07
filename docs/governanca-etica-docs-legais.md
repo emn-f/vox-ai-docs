@@ -1,5 +1,7 @@
 # Governança, Ética e Documentos Legais
 
+> Última atualização em 07/06/2026
+
 ## Código de Conduta
 
 O projeto adota o [Contributor Covenant](https://www.contributor-covenant.org) v2.1 com proteções específicas para a comunidade LGBTQIA+. Comportamentos proibidos incluem: LGBTfobia, deadnaming, misgendering intencional, racismo e qualquer forma de discriminação. Qualquer dúvida, entre em contato conosco: `assistentedeapoiolgbtvox@gmail.com`.

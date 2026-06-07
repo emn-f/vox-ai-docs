@@ -1,5 +1,7 @@
 # `git-cliff` e Geração Automática de CHANGELOG
 
+> Última atualização em 07/06/2026
+
 ## O que é o `git-cliff`
 
 `git-cliff` é um gerador de CHANGELOG escrito em Rust que analisa o histórico de commits git e transforma mensagens no formato Conventional Commits em um arquivo `CHANGELOG.md` estruturado. No Vox AI, ele é invocado via a GitHub Action `orhun/git-cliff-action@v4` dentro do workflow `production_pipeline.yml`.

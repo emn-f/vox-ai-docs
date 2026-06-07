@@ -1,12 +1,10 @@
 # Scripts Utilitários
 
+> Última atualização em 07/06/2026
+
 ## `scripts/gerar_embedding.py` — Reindexação da KB
 
 Deve ser executado quando ha registros com `embedding` nulo ou quando o modelo de embeddings e trocado. A função `reindexar()` busca todos os registros onde `embedding IS NULL`, itera gerando vetores com `task_type='RETRIEVAL_DOCUMENT'`, e salva apenas se a coluna ainda estiver nula (previne sobrescrita acidental). Tem delay de 500ms entre requisições para respeitar os rate limits da API.
-
-## `scripts/utilitario.py`
-
-Função `add_conhecimento_db(tema, descricao, referencias, autor)` para inserir novos itens na `knowledge_base` com embedding gerado automaticamente. Usada internamente pela equipe de curadoria.
 
 ## `pages/dashboard.js` — Dashboard de Transparencia
 

@@ -1,5 +1,7 @@
 # Glossário
 
+> Última atualização em 07/06/2026
+
 | Termo | Definição |
 |---|---|
 | **RAG (Retrieval-Augmented Generation)** | Técnica de IA que combina busca de informações relevantes em uma base de dados com geração de respostas por um LLM. Evita alucinações ao fornecer contexto real ao modelo. |

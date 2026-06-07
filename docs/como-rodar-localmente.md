@@ -1,5 +1,7 @@
 # Como Rodar Localmente (Setup para Novos Colaboradores)
 
+> Última atualização em 07/06/2026
+
 ##  Pré-requisitos
 
 - Python 3.13 instalado
@@ -12,52 +14,50 @@
 
 1. **Fork** este repositório.
 2. **Clone** o seu fork:
-    ```bash
-    git clone https://github.com/SEU-USUARIO/vox-ai.git
-    cd vox-ai
-    ```
+```bash
+git clone https://github.com/SEU-USUARIO/vox-ai.git
+cd vox-ai
+```
 3.  **Instale o uv** (Gerenciador de pacote):
-    ```bash
-    # Windows
-    powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-
-    # Mac/Linux
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    ```
+```bash
+# Windows
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+# Mac/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
 4.  **Instale as dependências:**
-    ```bash
-    uv sync
-    ```
-    > **Nota:** Para adicionar novas bibliotecas, use `uv add [NOME_DA_LIB]`.
-    > O arquivo `requirements.txt` é gerado automaticamente para deploy.
-    > Para atualizá-lo: `uv export --no-hashes > requirements.txt`
+```bash
+uv sync
+```
+> **Nota:** Para adicionar novas bibliotecas, use `uv add [NOME_DA_LIB]`.
+
 5.  **Configure as Variáveis de Ambiente:**
     Crie um arquivo `.streamlit/secrets.toml` na raiz do projeto.
     O arquivo deve seguir este formato:
 
-    ```toml
-    GEMINI_API_KEY = "SUA_CHAVE_AQUI"
-    
-    [supabase]
-    url = "SUA_URL_SUPABASE"
-    key = "SUA_CHAVE_ANON_SUPABASE"
-    ```
+```toml
+GEMINI_API_KEY = "SUA_CHAVE_AQUI"
 
-    > **🔒 Suporte a Variáveis de Ambiente (OS):**
-    > Como alternativa (ex: em contêineres Docker, nuvem ou CI/CD), você pode configurar as credenciais diretamente como variáveis de ambiente em caixa alta e sublinhados: `GEMINI_API_KEY`, `SUPABASE_URL` e `SUPABASE_KEY` (ou `SUPABASE_KEY_PROD` no Gatekeeper).
-    >
-    > * **Sem credenciais:** <u>O projeto rodará sem conexão com a base de dados do projeto usando apenas a resposta da IA</u>. Você verá avisos de conexão no terminal, o que é esperado.
-    > * **Precisa de acesso ao banco?** Se a feature que você deseja implementar depende estritamente do acesso ao banco de dados, envie um e-mail para a equipe. Podemos fornecer credenciais temporárias ou um ambiente de sandbox.
+[supabase]
+url = "SUA_URL_SUPABASE"
+key = "SUA_CHAVE_ANON_SUPABASE"
+```
+
+> **🔒 Suporte a Variáveis de Ambiente (OS):**
+> Como alternativa (ex: em contêineres Docker, nuvem ou CI/CD), você podeconfigurar as credenciais diretamente como variáveis de ambiente em caixa alta esublinhados: `GEMINI_API_KEY`, `SUPABASE_URL` e `SUPABASE_KEY` (ou`SUPABASE_KEY_PROD` no Gatekeeper).
+>
+> * **Sem credenciais:** <u>O projeto rodará sem conexão com a base de dados doprojeto usando apenas a resposta da IA</u>. Você verá avisos de conexão noterminal, o que é esperado.
+> * **Precisa de acesso ao banco?** Se a feature que você deseja implementardepende estritamente do acesso ao banco de dados, envie um e-mail para a equipe.Podemos fornecer credenciais temporárias ou um ambiente de sandbox.
 6.  **Instale os Git Hooks (Segurança):**
     Para garantir que nenhum segredo seja commitado, que o banco de dados esteja consistente e que as **mensagens de commit estejam no padrão**, instale os hooks de pré-commit:
-    ```bash
-    python scripts/install_hooks.py
-    ```
+```bash
+python scripts/install_hooks.py
+```
 
 7.  **Execute o projeto:**
-    ```bash
-    uv run streamlit run vox_ai.py
-    ```
+```bash
+uv run streamlit run vox_ai.py
+```
 
 
 8. Acesse em: `http://localhost:8501`
@@ -67,9 +67,6 @@
 ```bash
 # Adicionar biblioteca:
 uv add nome-da-biblioteca
-
-# Atualizar requirements.txt (usado no deploy):
-uv export --no-hashes > requirements.txt
 ```
 
 ## Rodando os Testes

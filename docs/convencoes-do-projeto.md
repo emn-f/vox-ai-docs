@@ -1,5 +1,7 @@
 # Convenções do Projeto
 
+> Última atualização em 07/06/2026
+
 ## Conventional Commits
 
 Formato: `tipo(escopo opcional): descrição em minúsculas`
