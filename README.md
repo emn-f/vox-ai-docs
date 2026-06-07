@@ -36,7 +36,7 @@ Este repositório contém a documentação técnica do Vox AI construída com **
 
 ### Pré-requisitos
 
-- **Python 3.10+** instalado
+- **Python 3.13** instalado
 - **Git** instalado
 - **pip** (gerenciador de pacote)
 
