@@ -39,10 +39,8 @@ jobs:
         echo "Nova versão: $NEW_TAG"
         echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
 
-    - name: Criar Tag e Push (Sem Changelog)
+    - name: Criar Tag e Push
       run: |
         NEW_TAG="${{ steps.calc_version.outputs.new_tag }}"
-        
-        # Apenas cria a tag no commit atual e sobe
         git tag $NEW_TAG
         git push origin $NEW_TAG
