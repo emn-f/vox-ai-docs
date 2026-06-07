@@ -15,7 +15,8 @@
 | Ferramenta | Contexto no Vox AI | Docs Oficiais |
 |---|---|---|
 | Google GenAI SDK (google-genai) | Biblioteca oficial para acessar a API do Gemini. Usada para gerar respostas (LLM) e embeddings (RAG) | [ai.google.dev/gemini-api/docs](https://ai.google.dev/gemini-api/docs?hl=pt-br) |
-| Gemini Flash (gemini-3-flash-preview) | Modelo LLM principal. Recebe o system prompt + contexto RAG e gera as respostas em streaming | [ai.google.dev/gemini-api/docs/models](https://ai.google.dev/gemini-api/docs/models?hl=pt-br) |
+| Gemini Flash (gemini-3.5-flash) | Modelo LLM principal. Recebe o system prompt + contexto RAG e gera as respostas em streaming | [ai.google.dev/gemini-api/docs/models](https://ai.google.dev/gemini-api/docs/models?hl=pt-br) |
+| Gemini Flash Lite (gemini-3.1-flash-lite) | Modelo LLM leve utilizado no Gatekeeper para revisões automáticas de segurança de código | [ai.google.dev/gemini-api/docs/models](https://ai.google.dev/gemini-api/docs/models?hl=pt-br) |
 | Gemini Embeddings (gemini-embedding-001) | Modelo de embeddings. Converte textos em vetores de 1536 dimensões para busca semântica | [ai.google.dev/gemini-api/docs/embeddings](https://ai.google.dev/gemini-api/docs/embeddings?hl=pt-br) |
 
 ## Banco de Dados

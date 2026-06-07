@@ -50,7 +50,7 @@ cd vox-ai-docs
 
 # 2. Crie um ambiente virtual (recomendado)
 ```bash
-python -m venv venv
+python -m venv .venv
 ```
 
 # 3. Ative o ambiente virtual

@@ -8,27 +8,38 @@
 | `mock_supabase_global` | Faz patch de `supabase.create_client`, retornando `MagicMock` com toda a cadeia de chamadas. |
 | `mock_gemini_global` | Faz patch de `google.genai.Client`, retornando mock com respostas pre-definidas. |
 
-## 9.2 `test_database_functions.py` — Testes Unitarios do Banco
+## Estrutura de Diretórios dos Testes
 
-- `salvar_sessao`: verifica se a tabela correta (`sessions`) foi chamada com o `session_id` correto.
-- `salvar_erro`: verifica se o `error_id` e valido e se a mensagem foi passada corretamente.
-- `salvar_report`: verifica retorno `True` e a chamada a tabela `user_reports`.
-- `get_categorias_erro`: verifica se retorna a lista de categorias mockada.
-- `buscar_referencias_db`: verifica se a RPC `match_knowledge_base` e chamada com os parâmetros corretos.
-- `recuperar_contexto_inteligente`: testa estratégia mista (2 tópicos diferentes) verificando se o contexto contem ambas as descrições e a fonte e "Tópicos mistos".
+Os testes são organizados da seguinte forma:
+- `tests/unit/`: Testes unitários com mocks globais (rápidos e isolados).
+- `tests/integration/`: Testes de integração reais com Supabase e Gemini (exigem conexão e chaves reais).
 
-## 9.3 `test_gemini_integration.py`
+---
 
-Teste de integração REAL com a API Gemini. Busca a chave em `secrets.toml` ou variáveis de ambiente. Se não encontrar: `pytest.skip`.
+## Testes Unitários (`tests/unit/`)
 
-> **ATENÇÃO:** Este teste faz chamadas reais a API e consome cota do Gemini. Não deve rodar em CI sem credenciais configuradas.
+### 1. `test_database_functions.py`
+* **`test_salvar_sessao`**: Verifica se a tabela `sessions` foi chamada corretamente com o `session_id`.
+* **`test_salvar_erro`**: Garante que o `error_id` curto é gerado e que a mensagem é enviada à tabela `error_logs`.
+* **`test_salvar_report`**: Valida a persistência na tabela `user_reports`.
+* **`test_get_categorias_erro`**: Garante que retorna as categorias cadastradas.
+* **`test_buscar_referencias_db`**: Verifica se a RPC `match_knowledge_base` é chamada com os parâmetros corretos.
+* **`test_recuperar_contexto_inteligente`**: Valida a escolha estratégica do RAG inteligente.
 
-## 9.4 `test_supabase_connection.py`
+### 2. `test_security_check.py`
+* Cobre o módulo `security_check.py`, testando a higienização de segredos e chaves de API, as tomadas de decisão baseadas nos status de retorno da IA (`[PASS]` e `[BLOCK]`) e a resiliência a falhas da API (fail-open).
 
-Teste de integração REAL com Supabase. Pulado automaticamente se as credenciais não forem encontradas. Testa fazendo `SELECT` na tabela `report_categories`.
+### 3. `test_genai_error_handling.py`
+* Cobre a lógica de interceptação de erros estruturados (`APIError`) e a renderização de alertas amigáveis para cotas (429) e indisponibilidades (503).
 
-## 9.5 `test_security_check.py`
+---
 
-Cobre o modulo `security_check.py`: sanitização de segredos, comportamentos com diferentes respostas da IA e falha aberta em caso de exceção da API.
+## Testes de Integração (`tests/integration/`)
+
+### 1. `test_gemini_integration.py`
+* Realiza chamadas reais de geração de conteúdo e de transcrição no Gemini utilizando a chave de API real. Pula o teste caso a chave não esteja disponível.
+
+### 2. `test_supabase_connection.py`
+* Testa a conexão real de leitura com a tabela do Supabase. Pulado se as credenciais reais de banco não forem encontradas no ambiente de execução.
 
 ---

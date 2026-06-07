@@ -23,37 +23,40 @@ O arquivo gerencia dois tipos de entrada: texto via `st.chat_input` e áudio via
 
 ## `src/config.py` — Configurações Globais
 
-Centraliza todas as constantes e configurações do sistema. Importado por praticamente todos os outros modulos.
+Centraliza todas as constantes e configurações do sistema. Importado por praticamente todos os outros módulos.
 
 | Constante | Valor | Descrição |
 |---|---|---|
-| `GEMINI_MODEL_NAME` | `gemini-3-flash-preview` | Modelo LLM para geracao de respostas |
+| `GEMINI_MODEL_NAME` | `gemini-3.5-flash` | Modelo LLM principal para geração de respostas |
+| `GEMINI_MODEL_GATEKEEP` | `gemini-3.1-flash-lite` | Modelo LLM para Code Review automático no Gatekeeper |
 | `MODELO_SEMANTICO_NOME` | `gemini-embedding-001` | Modelo de embeddings para o RAG |
-| `TAMANHO_VETOR_SEMANTICO` | `1536` | Dimensão do vetor (DEVE corresponder a coluna do banco) |
-| `SEMANTICA_THRESHOLD` | `0.5` | Similaridade minima para um chunk ser considerado relevante |
+| `TAMANHO_VETOR_SEMANTICO` | `1536` | Dimensão do vetor (DEVE corresponder à coluna do banco) |
+| `SEMANTICA_THRESHOLD` | `0.5` | Similaridade mínima para um chunk ser considerado relevante |
 | `LIMITE_TEMAS` | `10` | Quantos chunks são buscados na primeira fase do RAG |
-| `MAX_CHUNCK` | `25` | Maximo de chunks na Estratégia de Contexto Expandido |
+| `MAX_CHUNCK` | `25` | Máximo de chunks na Estratégia de Contexto Expandido |
 | `CSS_PATH` | `static/css/style.css` | Caminho do CSS customizado injetado no Streamlit |
 
-**`get_secret(key, default='')`:** Busca credencial com fallback: (1) `st.secrets`, (2) variáveis de ambiente. Suporta chaves aninhadas com ponto como separador: `'supabase.url'` busca `st.secrets['supabase']['url']`.
-
-**`StatusConhecimento`:** Enum para status de aprovação de item da base: `PENDENTE = -1`, `REJEITADO = 0`, `APROVADO = 1`.
+**`get_secret(key, default='')`:** Busca credencial com fallback robusto: (1) `st.secrets` (se disponível), (2) variáveis de ambiente com formatação padrão (`KEY_NAME` em caixa alta e sublinhados), (3) variável literal. Suporta chaves aninhadas com ponto como separador: `'supabase.url'` busca `st.secrets['supabase']['url']`.
 
 ---
 
-## `src/core/database.py` — Camada de Dados
+## `src/core/database.py` e `src/core/db/` — Camada de Dados
 
-Responsável por toda a comunicação com o Supabase. Contém o cliente singleton e todas as funções de leitura/escrita.
+O arquivo `src/core/database.py` atua como uma **Facade (Fachada) de re-exportação**, mantendo a compatibilidade retroativa para módulos antigos do projeto. Toda a implementação real e controle de acesso ao Supabase foi modularizada no pacote `src/core/db/`:
 
-* **`get_db_client() -> Client`:** Cria e retorna o cliente Supabase. Decorado com `@st.cache_resource`, garantindo uma única instância por execução. Retorna `None` se as credenciais não forem encontradas.
-* **`salvar_sessao(session_id)`:** Insere novo registro na tabela `sessions`. Chamada uma única vez na inicialização do app.
-* **`salvar_log_chat(session_id, git_version, prompt, response, fonte_info, lista_kb_ids)`:** Salva o par pergunta-resposta no `chat_logs` e em seguida cria os registros relacionais em `chat_logs_kb`. O campo `similarity` é salvo quando disponivel (busca vetorial) ou `None` (Estratégia de Contexto Expandido).
-* **`salvar_erro(session_id, git_version, error_msg) -> str`:** Registra exceção na tabela `error_logs`. Gera `error_id` curto (8 chars) via `uuid4()[:8]` exibido ao usuário. Retorna `'ERRO-DB'` se a própria gravação falhar.
-* **`salvar_report(...) -> bool`:** Salva denuncia em `user_reports` com histórico completo.
-* **`get_categorias_erro() -> list`:** Busca `report_categories` para popular o selectbox do dialog de reporte.
-* **`buscar_referencias_db(vector_embedding, threshold, limit, filter_topic) -> list`:** Executa a RPC `match_knowledge_base` validando dimensão do vetor antes de enviar.
-* **`buscar_chunks_por_topico(topico_alvo, limit) -> list`:** Busca diretamente na `knowledge_base` todos os chunks de um tópico especifico. Usado na Estratégia de Contexto Expandido.
-* **`recuperar_contexto_inteligente(vector_embedding) -> tuple(str, str, list)`:** Função principal do RAG inteligente. Retorna `(texto_contexto, nome_da_fonte, lista_ids)`. Logica: chama `buscar_referencias_db()` para 10 resultados, conta ocorrências de cada tópico. Se tópico vencedor tem 3 ou mais votos: busca TODOS os chunks do tópico (Contexto Expandido). Caso contrário: usa os 5 melhores resultados mistos.
+* **`src/core/db/client.py` (`get_db_client() -> Client`)**:
+    * Cria e retorna o cliente Supabase singleton. Decorado com `@st.cache_resource`, garantindo uma única conexão por execução. Retorna `None` se as credenciais do banco não estiverem presentes.
+* **`src/core/db/sessions.py` (`salvar_sessao(session_id)`)**:
+    * Insere o registro da sessão na tabela `sessions` na inicialização do aplicativo.
+* **`src/core/db/logs.py` (`salvar_log_chat(session_id, git_version, prompt, response, lista_kb_ids)`)**:
+    * Salva a pergunta e resposta em `chat_logs` e registra os relacionamentos na tabela `chat_logs_kb` com suas respectivas similaridades.
+    * **`salvar_erro(session_id, git_version, error_msg) -> str`**: Registra exceções no banco na tabela `error_logs` e retorna um `error_id` amigável (8 caracteres) para o usuário.
+* **`src/core/db/reports.py` (`salvar_report(...) -> bool`, `get_categorias_erro() -> list`)**:
+    * Permite o salvamento de denúncias de bugs/conteúdo e retorna a lista de categorias válidas.
+* **`src/core/db/retrieval.py` (`buscar_referencias_db(...)`, `buscar_chunks_por_topico(...)`, `recuperar_contexto_inteligente(...)`)**:
+    * **`buscar_referencias_db`**: Executa a busca vetorial usando pgvector (`match_knowledge_base`).
+    * **`buscar_chunks_por_topico`**: Retorna os chunks vinculados a um determinado tema.
+    * **`recuperar_contexto_inteligente`**: Decide dinamicamente a melhor estratégia de RAG: **Contexto Expandido** (tópico dominante com 3+ ocorrências) ou **Tópicos Mistos** (fallback dos top-5 chunks).
 
 ---
 

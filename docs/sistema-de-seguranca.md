@@ -14,8 +14,9 @@ Três hooks são instalados no diretório `.git/hooks/`:
 | Hook | Fase | Função |
 |---|---|---|
 | `commit-msg` | Ao criar mensagem de commit | Valida formato Conventional Commits |
-| `pre-commit` | Antes de registrar o commit | Reservado para expansão futura |
-| `pre-push` | Antes de enviar ao remoto | Executa `security_check.py` |
+| `pre-commit` | Antes de registrar o commit | Executa `security_check.py` em arquivos staged (segredos e migrations) |
+| `pre-push` | Antes de enviar ao remoto | Executa `security_check.py` em commits locais (segredos, migrations e Code Review IA) |
+
 
 
 ### `install_hooks.py` — Instalação Dinâmica
@@ -161,13 +162,13 @@ O Git injeta informações sobre o push via stdin do hook no formato:
 
 O script usa o `remote-ref` para determinar contra qual branch remoto calcular o diff.
 
-### Hook `pre-commit` (Reservado)
+### Hook `pre-commit`
 
-O hook `pre-commit` é instalado mas implementado como um **no-op** (exit 0 imediato) na versão atual. Sua presença serve como ponto de extensão para futuras validações que devem ocorrer antes de finalizar o commit, como:
+O hook `pre-commit` executa `gatekeep/security_check.py` com o argumento `--mode pre-commit`. Ele é acionado antes de registrar o commit e analisa apenas os arquivos na área de staging (`git diff --cached`).
 
-- Verificação de cobertura de testes mínima
-- Linting com `ruff` ou `flake8`
-- Verificação de arquivos grandes acidentalmente adicionados
+Suas principais funções são:
+- **Verificação de segredos:** Impede que chaves e segredos sejam salvos no histórico local.
+- **Consistência de migrations:** Bloqueia commits de novas colunas/tabelas se o respectivo script de migração SQL não estiver no mesmo commit.
 
 ## Fluxo Completo do `security_check.py`
 
@@ -177,8 +178,10 @@ O `gatekeep/security_check.py` é o núcleo do sistema de revisão de código co
 
 | Contexto | Acionador | `--mode` | O que analisa |
 |---|---|---|---|
-| Git Hook local | `pre-push` no terminal do dev | `pre-push` | Diff entre `HEAD` e o branch remoto (`origin/<branch>`) |
+| Git Hook local (commit) | `pre-commit` no terminal do dev | `pre-commit` | Arquivos na área de staging (`--cached`) |
+| Git Hook local (push) | `pre-push` no terminal do dev | `pre-push` | Diff entre `HEAD` e o branch remoto (`origin/<branch>`) |
 | GitHub Actions | PR aberta para `develop` ou `main` | `pre-push` | Diff do PR completo via `GITHUB_BASE_REF` |
+
 
 O script é projetado para **falhar aberto** em caso de erro de rede (`fail-open`): se a API do Gemini estiver indisponível, o push/merge é permitido para não bloquear o fluxo de desenvolvimento por razões de infraestrutura.
 
@@ -217,27 +220,9 @@ Se o diff estiver **vazio** (nada mudou em relação ao remoto, ou é o primeiro
 
 ### Fase 2 — Sanitização do Diff (`sanitize_diff_for_ai`)
 
-Antes de enviar qualquer dado para a API externa, o diff passa por uma camada de sanitização que detecta e redige padrões sensíveis via expressões regulares.
+Antes de enviar qualquer dado para a API externa, o diff passa por uma camada de sanitização que detecta e redige padrões sensíveis utilizando a mesma lista de expressões regulares (`SECRETS_PATTERNS`) importada de `gatekeep/secrets_check.py`.
 
-**Padrões detectados:**
-
-```python
-SECRET_PATTERNS = [
-    # Chaves de API genéricas (ex: sk-..., AIza...)
-    r'(?i)(api[_-]?key|apikey)\s*[=:]\s*[\'""]?([A-Za-z0-9_\-]{20,})',
-    # Tokens Bearer e JWT
-    r'(?i)(bearer\s+[A-Za-z0-9\-_\.]+)',
-    r'eyJ[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+',
-    # URLs de banco com credenciais embutidas
-    r'(?i)(postgres|mysql|mongodb)://[^@\s]+@[^\s]+',
-    # Variáveis nomeadas como password/secret/token com valor
-    r'(?i)(password|passwd|secret|token|private_key)\s*[=:]\s*[\'""]?.{6,}',
-    # Chaves do Supabase (formato específico: eyJ... de 100+ chars)
-    r'eyJ[A-Za-z0-9+/=]{80,}',
-]
-```
-
-Cada match é substituído por `[REDACTED SECRET DETECTED]`. O diff sanitizado é o único dado enviado à API — **os valores originais dos segredos nunca saem da máquina**.
+Cada linha adicionada no diff (iniciada com `+`) que dê match com algum desses padrões é substituída por `+ # [REDACTED SECRET DETECTED]`. O diff sanitizado é o único dado enviado à API — **os valores originais dos segredos nunca saem da máquina**.
 
 > **Nota de Segurança:** A substituição acontece no texto do diff, não no arquivo original. O código-fonte local permanece inalterado.
 

@@ -43,9 +43,9 @@
     key = "SUA_CHAVE_ANON_SUPABASE"
     ```
 
-    > **🔒 Credenciais do Supabase (Interno):**
-    > O Vox utiliza o **Supabase** para RAG e Logs. Essas credenciais não são públicas.
-    > 
+    > **🔒 Suporte a Variáveis de Ambiente (OS):**
+    > Como alternativa (ex: em contêineres Docker, nuvem ou CI/CD), você pode configurar as credenciais diretamente como variáveis de ambiente em caixa alta e sublinhados: `GEMINI_API_KEY`, `SUPABASE_URL` e `SUPABASE_KEY` (ou `SUPABASE_KEY_PROD` no Gatekeeper).
+    >
     > * **Sem credenciais:** <u>O projeto rodará sem conexão com a base de dados do projeto usando apenas a resposta da IA</u>. Você verá avisos de conexão no terminal, o que é esperado.
     > * **Precisa de acesso ao banco?** Se a feature que você deseja implementar depende estritamente do acesso ao banco de dados, envie um e-mail para a equipe. Podemos fornecer credenciais temporárias ou um ambiente de sandbox.
 6.  **Instale os Git Hooks (Segurança):**
@@ -75,12 +75,15 @@ uv export --no-hashes > requirements.txt
 ## Rodando os Testes
 
 ```bash
-# Todos os testes unitários:
+# Todos os testes unitários e de integração:
 pytest
 
+# Apenas testes unitários:
+pytest tests/unit/
+
 # Testes de integração (requerem credenciais reais):
-pytest tests/test_gemini_integration.py
-pytest tests/test_supabase_connection.py
+pytest tests/integration/test_gemini_integration.py
+pytest tests/integration/test_supabase_connection.py
 ```
 
 ---
