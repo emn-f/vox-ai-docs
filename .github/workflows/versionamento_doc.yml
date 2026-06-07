@@ -7,7 +7,7 @@ permissions:
   contents: write
 
 jobs:
-  tag_dev_only:
+  new_version:
     runs-on: ubuntu-latest
 
     steps:
