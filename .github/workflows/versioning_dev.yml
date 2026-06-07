@@ -1,6 +1,8 @@
 name: 🗂️ Versionamento da Documentação
 on:
   push:
+    branches:
+      - main
 permissions:
   contents: write
 

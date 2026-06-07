@@ -2,10 +2,8 @@ name: 📜 Deploy da Documentação no MKDocs
 
 on:
   push:
-    branches:
-      - main
-    paths-ignore:
-      - "README.md"
+    tags:
+      - 'v*'
 
 permissions:
   contents: write
@@ -17,6 +15,10 @@ jobs:
       - name: Baixar o código
         uses: actions/checkout@v4
         
+      - name: Injetar Versão no mkdocs.yml
+        run: |
+          sed -i "s|Licença GNU GPLv3|Licença GNU GPLv3 \| Versão ${{ github.ref_name }}|g" mkdocs.yml
+          
       - name: Instalar Python
         uses: actions/setup-python@v5
         with:
