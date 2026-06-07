@@ -15,9 +15,10 @@ jobs:
       - name: Baixar o código
         uses: actions/checkout@v4
         
-      - name: Injetar Versão no mkdocs.yml
+      - name: Injetar Versão nos arquivos
         run: |
           sed -i "s|Licença GNU GPLv3|Licença GNU GPLv3 \| Versão ${{ github.ref_name }}|g" mkdocs.yml
+          sed -i "s|\(> Última atualização por .* em [0-9]\{2\}/[0-9]\{2\}/[0-9]\{4\}\)|\1 (Versão ${{ github.ref_name }})|g" docs/index.md
           
       - name: Instalar Python
         uses: actions/setup-python@v5
