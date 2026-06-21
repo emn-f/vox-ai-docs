@@ -102,4 +102,6 @@ Toda ajuda é bem vinda! Saiba mais no nosso [Guia de Contribuição](https://gi
 
 ---
 
-*🤖 Vox AI: conversas que importam 🏳️‍🌈*
+<div align="left">
+    <p>© 2026 Vox AI: Segurança para ser quem você é.</p>
+</div>
